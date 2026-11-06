@@ -1,6 +1,7 @@
 # Segredos
 .env
 .env.*
+!.env.example
 
 # Ambiente virtual (uv)
 .venv/

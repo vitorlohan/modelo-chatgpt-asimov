@@ -1,0 +1,10 @@
+# Segredos
+.env
+.env.*
+
+# Ambiente virtual (uv)
+.venv/
+
+# Python
+__pycache__/
+*.py[cod]

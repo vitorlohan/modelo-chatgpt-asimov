@@ -1,0 +1,691 @@
+{
+ "version": 1,
+ "tool": "wd3 0.1.0",
+ "captureId": "aura-cloud.aura.build-9fc0b5b3",
+ "capturedAt": "2026-09-25T22:47:41+00:00",
+ "entry": {
+  "url": "https://aura-cloud.aura.build/",
+  "path": "/",
+  "search": "",
+  "file": "assets/aura-cloud.aura.build/index.html",
+  "contentType": "text/html; charset=utf-8"
+ },
+ "blocked": [
+  "^https?://([^/?#]+\\.)?(google\\-analytics\\.com|analytics\\.google\\.com|googletagmanager\\.com|googleadservices\\.com|doubleclick\\.net|googlesyndication\\.com|googleoptimize\\.com|connect\\.facebook\\.net|bat\\.bing\\.com|snap\\.licdn\\.com|px\\.ads\\.linkedin\\.com|analytics\\.tiktok\\.com|ct\\.pinterest\\.com|static\\.ads\\-twitter\\.com|analytics\\.twitter\\.com|tr\\.snapchat\\.com|sc\\-static\\.net|mc\\.yandex\\.ru|hotjar\\.com|hotjar\\.io|clarity\\.ms|cdn\\.segment\\.com|api\\.segment\\.io|cdn\\.mxpnl\\.com|api\\-js\\.mixpanel\\.com|api\\.mixpanel\\.com|api\\.amplitude\\.com|api2\\.amplitude\\.com|api\\-secure\\.amplitude\\.com|api\\-sr\\.amplitude\\.com|sr\\-client\\-cfg\\.amplitude\\.com|plausible\\.io|cloud\\.umami\\.is|analytics\\.umami\\.is|static\\.cloudflareinsights\\.com|cloudflareinsights\\.com|vitals\\.vercel\\-insights\\.com|browser\\-intake\\-datadoghq\\.com|browser\\-intake\\-datadoghq\\.eu|js\\-agent\\.newrelic\\.com|bam\\.nr\\-data\\.net|bam\\-cell\\.nr\\-data\\.net|fullstory\\.com|script\\.crazyegg\\.com|mouseflow\\.com|smartlook\\.com|heapanalytics\\.com|i\\.posthog\\.com|stats\\.wp\\.com|pixel\\.wp\\.com|promotekit\\.com|ingest\\.sentry\\.io|ingest\\.us\\.sentry\\.io|ingest\\.de\\.sentry\\.io|widget\\.intercom\\.io|js\\.intercomcdn\\.com|api\\-iam\\.intercom\\.io|js\\.hs\\-scripts\\.com|js\\.hs\\-analytics\\.net|js\\.hs\\-banner\\.com|js\\.hscollectedforms\\.net|js\\.usemessages\\.com|track\\.hubspot\\.com|client\\.crisp\\.chat|embed\\.tawk\\.to|js\\.driftt\\.com|static\\.zdassets\\.com|ekr\\.zdassets\\.com|cdn\\.cookielaw\\.org|geolocation\\.onetrust\\.com|consent\\.cookiebot\\.com|consentcdn\\.cookiebot\\.com|app\\.usercentrics\\.eu|api\\.usercentrics\\.eu|cdn\\.iubenda\\.com|cmp\\.osano\\.com|cdn\\.termly\\.io)(:\\d+)?([/?#]|$)",
+  "/rpc/increment_shared_code_views",
+  "^https?://(umami|analytics|stats|plausible)\\.[^/]+/(api/send|api/collect|api/event|script\\.js)",
+  "/g/c(ollect)?\\?v=2&",
+  "sentry\\.io/api/\\d+/(envelope|store)",
+  "/api/meta-capi",
+  "^https?://(leadtracker|tracking|track|events?|collect)\\.[^/]+/",
+  "^https?://a\\.vturb\\.com/",
+  "facebook\\.com/tr[/?]",
+  "/_vercel/(speed-)?insights/",
+  "/cdn-cgi/rum",
+  "/cdn-cgi/challenge-platform/",
+  "google\\.com/(pagead|ads)/"
+ ],
+ "volatileParams": [
+  "v",
+  "_rsc",
+  "dpl",
+  "_",
+  "t",
+  "ts",
+  "timestamp",
+  "cb",
+  "cachebust",
+  "cacheBust",
+  "nocache",
+  "rnd",
+  "rand",
+  "random",
+  "_t"
+ ],
+ "entries": [
+  {
+   "url": "https://aura-cloud.aura.build/",
+   "method": "GET",
+   "status": 200,
+   "contentType": "text/html; charset=utf-8",
+   "headers": {
+    "content-type": "text/html; charset=utf-8"
+   },
+   "resourceType": "document",
+   "passes": [
+    "desktop",
+    "mobile"
+   ],
+   "file": "assets/aura-cloud.aura.build/index.html",
+   "size": 140014
+  },
+  {
+   "url": "https://aura-cloud.aura.build/__wd3/aura-modules.json",
+   "method": "GET",
+   "status": 200,
+   "contentType": "application/json",
+   "headers": {
+    "content-type": "application/json"
+   },
+   "resourceType": "fetch",
+   "passes": [
+    "desktop",
+    "mobile"
+   ],
+   "file": "assets/aura-cloud.aura.build/__wd3/aura-modules.json",
+   "size": 99833
+  },
+  {
+   "url": "https://code.iconify.design/iconify-icon/3.0.0/iconify-icon.min.js",
+   "method": "GET",
+   "status": 200,
+   "contentType": "application/javascript; charset=utf-8",
+   "headers": {
+    "access-control-allow-origin": "*",
+    "content-type": "application/javascript; charset=utf-8",
+    "x-cache-hits": "0",
+    "x-fastly-request-id": "a1389f28b1a3afd2e9c4a87c6971e2273c24c7ac",
+    "x-github-edge-region": "brazilsouth",
+    "x-github-request-id": "35AC:178158:48980F:4DF31A:6AAD1EF2",
+    "x-origin-cache": "HIT",
+    "x-proxy-cache": "HIT"
+   },
+   "resourceType": "script",
+   "passes": [
+    "mobile",
+    "desktop"
+   ],
+   "file": "assets/code.iconify.design/iconify-icon/3.0.0/iconify-icon.min.js",
+   "size": 22273,
+   "modes": [
+    "no-cors"
+   ]
+  },
+  {
+   "url": "https://cdn.tailwindcss.com/",
+   "method": "GET",
+   "status": 302,
+   "contentType": "",
+   "headers": {
+    "location": "/3.4.17"
+   },
+   "resourceType": "script",
+   "passes": [
+    "desktop",
+    "mobile"
+   ],
+   "size": 0,
+   "redirect": "https://cdn.tailwindcss.com/3.4.17",
+   "modes": [
+    "no-cors"
+   ]
+  },
+  {
+   "url": "https://cdn.tailwindcss.com/3.4.17",
+   "method": "GET",
+   "status": 200,
+   "contentType": "text/javascript",
+   "headers": {
+    "content-type": "text/javascript"
+   },
+   "resourceType": "script",
+   "passes": [
+    "mobile",
+    "desktop"
+   ],
+   "file": "assets/cdn.tailwindcss.com/3.4.17.js",
+   "size": 407279,
+   "modes": [
+    "no-cors"
+   ]
+  },
+  {
+   "url": "https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.7/ScrollTrigger.min.js",
+   "method": "GET",
+   "status": 200,
+   "contentType": "application/javascript; charset=utf-8",
+   "headers": {
+    "access-control-allow-origin": "*",
+    "cf-cdnjs-via": "cfworker/r2",
+    "content-type": "application/javascript; charset=utf-8",
+    "priority": "u=1,i=?0",
+    "timing-allow-origin": "*",
+    "x-cdnjs-cache": "HIT"
+   },
+   "resourceType": "script",
+   "passes": [
+    "mobile",
+    "desktop"
+   ],
+   "file": "assets/cdnjs.cloudflare.com/ajax/libs/gsap/3.12.7/ScrollTrigger.min.js",
+   "size": 43974,
+   "modes": [
+    "no-cors"
+   ]
+  },
+  {
+   "url": "https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.7/gsap.min.js",
+   "method": "GET",
+   "status": 200,
+   "contentType": "application/javascript; charset=utf-8",
+   "headers": {
+    "access-control-allow-origin": "*",
+    "cf-cdnjs-via": "cfworker/r2",
+    "content-type": "application/javascript; charset=utf-8",
+    "priority": "u=1,i=?0",
+    "timing-allow-origin": "*",
+    "x-cdnjs-cache": "HIT"
+   },
+   "resourceType": "script",
+   "passes": [
+    "mobile",
+    "desktop"
+   ],
+   "file": "assets/cdnjs.cloudflare.com/ajax/libs/gsap/3.12.7/gsap.min.js",
+   "size": 72304,
+   "modes": [
+    "no-cors"
+   ]
+  },
+  {
+   "url": "https://unpkg.com/@babel/standalone@7.24.0/babel.min.js",
+   "method": "GET",
+   "status": 200,
+   "contentType": "text/javascript; charset=utf-8",
+   "headers": {
+    "access-control-allow-headers": "*",
+    "access-control-allow-methods": "GET, HEAD, OPTIONS",
+    "access-control-allow-origin": "*",
+    "access-control-expose-headers": "*",
+    "content-digest": "sha256=:y7CLqfJ8hx1b66KgN0NrY2VO0NS3usV2SaoqiytHbe0=:",
+    "content-type": "text/javascript; charset=utf-8",
+    "fly-request-id": "01KZ9BVDH978MBBMEV7RP7GGDK-ewr",
+    "priority": "u=1,i=?0"
+   },
+   "resourceType": "script",
+   "passes": [
+    "mobile",
+    "desktop"
+   ],
+   "file": "assets/unpkg.com/@babel/standalone@7.24.0/babel.min.js",
+   "size": 2867392,
+   "modes": [
+    "no-cors"
+   ]
+  },
+  {
+   "url": "https://esm.sh/react@18.3.1?dev",
+   "method": "GET",
+   "status": 200,
+   "contentType": "application/javascript; charset=utf-8",
+   "headers": {
+    "access-control-allow-origin": "*",
+    "access-control-expose-headers": "X-ESM-Path, X-TypeScript-Types",
+    "content-type": "application/javascript; charset=utf-8",
+    "priority": "u=1,i=?0",
+    "x-esm-path": "/react@18.3.1/es2022/react.development.mjs",
+    "x-typescript-types": "https://esm.sh/@types/react@~18.3.26/index.d.ts"
+   },
+   "resourceType": "script",
+   "passes": [
+    "desktop",
+    "mobile"
+   ],
+   "file": "assets/esm.sh/react@18.3.1__q34c6fcec.js",
+   "size": 158,
+   "modes": [
+    "cors"
+   ]
+  },
+  {
+   "url": "https://esm.sh/react@18.3.1/es2022/react.development.mjs",
+   "method": "GET",
+   "status": 200,
+   "contentType": "application/javascript; charset=utf-8",
+   "headers": {
+    "access-control-allow-origin": "*",
+    "content-type": "application/javascript; charset=utf-8",
+    "priority": "u=1,i=?0"
+   },
+   "resourceType": "script",
+   "passes": [
+    "desktop",
+    "mobile"
+   ],
+   "file": "assets/esm.sh/react@18.3.1/es2022/react.development.mjs",
+   "size": 80361,
+   "modes": [
+    "cors"
+   ]
+  },
+  {
+   "url": "https://esm.sh/react-dom@18.3.1?dev&external=react",
+   "method": "GET",
+   "status": 200,
+   "contentType": "application/javascript; charset=utf-8",
+   "headers": {
+    "access-control-allow-origin": "*",
+    "access-control-expose-headers": "X-ESM-Path, X-TypeScript-Types",
+    "content-type": "application/javascript; charset=utf-8",
+    "priority": "u=1,i=?0",
+    "x-esm-path": "/react-dom@18.3.1/X-ZXJlYWN0/es2022/react-dom.development.mjs",
+    "x-typescript-types": "https://esm.sh/@types/react-dom@~18.3.7/X-ZXJlYWN0/index.d.ts"
+   },
+   "resourceType": "script",
+   "passes": [
+    "desktop",
+    "mobile"
+   ],
+   "file": "assets/esm.sh/react-dom@18.3.1__q161831d8.js",
+   "size": 288,
+   "modes": [
+    "cors"
+   ]
+  },
+  {
+   "url": "https://esm.sh/react-dom@18.3.1/client?dev&external=react",
+   "method": "GET",
+   "status": 200,
+   "contentType": "application/javascript; charset=utf-8",
+   "headers": {
+    "access-control-allow-origin": "*",
+    "access-control-expose-headers": "X-ESM-Path, X-TypeScript-Types",
+    "content-type": "application/javascript; charset=utf-8",
+    "priority": "u=1,i=?0",
+    "x-esm-path": "/react-dom@18.3.1/X-ZXJlYWN0/es2022/client.development.mjs",
+    "x-typescript-types": "https://esm.sh/@types/react-dom@~18.3.7/X-ZXJlYWN0/client.d.ts"
+   },
+   "resourceType": "script",
+   "passes": [
+    "desktop",
+    "mobile"
+   ],
+   "file": "assets/esm.sh/react-dom@18.3.1/client__q161831d8.js",
+   "size": 273,
+   "modes": [
+    "cors"
+   ]
+  },
+  {
+   "url": "https://esm.sh/react-dom@18.3.1/X-ZXJlYWN0/es2022/react-dom.development.mjs",
+   "method": "GET",
+   "status": 200,
+   "contentType": "application/javascript; charset=utf-8",
+   "headers": {
+    "access-control-allow-origin": "*",
+    "content-type": "application/javascript; charset=utf-8",
+    "priority": "u=1,i=?0"
+   },
+   "resourceType": "script",
+   "passes": [
+    "desktop",
+    "mobile"
+   ],
+   "file": "assets/esm.sh/react-dom@18.3.1/X-ZXJlYWN0/es2022/react-dom.development.mjs",
+   "size": 3013,
+   "modes": [
+    "cors"
+   ]
+  },
+  {
+   "url": "https://esm.sh/react-dom@18.3.1/X-ZXJlYWN0/es2022/client.development.mjs",
+   "method": "GET",
+   "status": 200,
+   "contentType": "application/javascript; charset=utf-8",
+   "headers": {
+    "access-control-allow-origin": "*",
+    "content-type": "application/javascript; charset=utf-8",
+    "priority": "u=1,i=?0"
+   },
+   "resourceType": "script",
+   "passes": [
+    "desktop",
+    "mobile"
+   ],
+   "file": "assets/esm.sh/react-dom@18.3.1/X-ZXJlYWN0/es2022/client.development.mjs",
+   "size": 3056,
+   "modes": [
+    "cors"
+   ]
+  },
+  {
+   "url": "https://esm.sh/react-dom@18.3.1/X-ZXJlYWN0/es2022/cjs/react-dom.development.development.mjs",
+   "method": "GET",
+   "status": 200,
+   "contentType": "application/javascript; charset=utf-8",
+   "headers": {
+    "access-control-allow-origin": "*",
+    "content-type": "application/javascript; charset=utf-8",
+    "priority": "u=1,i=?0"
+   },
+   "resourceType": "script",
+   "passes": [
+    "desktop",
+    "mobile"
+   ],
+   "file": "assets/esm.sh/react-dom@18.3.1/X-ZXJlYWN0/es2022/cjs/react-dom.development.development.mjs",
+   "size": 916708,
+   "modes": [
+    "cors"
+   ]
+  },
+  {
+   "url": "https://esm.sh/scheduler@%5E0.23.2?target=es2022&dev",
+   "method": "GET",
+   "status": 200,
+   "contentType": "application/javascript; charset=utf-8",
+   "headers": {
+    "access-control-allow-origin": "*",
+    "access-control-expose-headers": "X-ESM-Path, X-TypeScript-Types",
+    "content-type": "application/javascript; charset=utf-8",
+    "priority": "u=1,i=?0",
+    "x-esm-path": "/scheduler@0.23.2/es2022/scheduler.development.mjs",
+    "x-typescript-types": "https://esm.sh/@types/scheduler@~0.23.0/index.d.ts"
+   },
+   "resourceType": "script",
+   "passes": [
+    "desktop",
+    "mobile"
+   ],
+   "file": "assets/esm.sh/scheduler@^0.23.2__qe16f0dd6.js",
+   "size": 178,
+   "modes": [
+    "cors"
+   ]
+  },
+  {
+   "url": "https://esm.sh/scheduler@0.23.2/es2022/scheduler.development.mjs",
+   "method": "GET",
+   "status": 200,
+   "contentType": "application/javascript; charset=utf-8",
+   "headers": {
+    "access-control-allow-origin": "*",
+    "content-type": "application/javascript; charset=utf-8",
+    "priority": "u=1,i=?0"
+   },
+   "resourceType": "script",
+   "passes": [
+    "desktop",
+    "mobile"
+   ],
+   "file": "assets/esm.sh/scheduler@0.23.2/es2022/scheduler.development.mjs",
+   "size": 20237,
+   "modes": [
+    "cors"
+   ]
+  },
+  {
+   "url": "https://esm.sh/lucide-react@0.462.0?external=react,react-dom",
+   "method": "GET",
+   "status": 200,
+   "contentType": "application/javascript; charset=utf-8",
+   "headers": {
+    "access-control-allow-origin": "*",
+    "access-control-expose-headers": "X-ESM-Path, X-TypeScript-Types",
+    "content-type": "application/javascript; charset=utf-8",
+    "priority": "u=1,i=?0",
+    "x-esm-path": "/lucide-react@0.462.0/X-ZXJlYWN0LHJlYWN0LWRvbQ/es2022/lucide-react.mjs",
+    "x-typescript-types": "https://esm.sh/lucide-react@0.462.0/X-ZXJlYWN0LHJlYWN0LWRvbQ/dist/lucide-react.d.ts"
+   },
+   "resourceType": "script",
+   "passes": [
+    "desktop",
+    "mobile"
+   ],
+   "file": "assets/esm.sh/lucide-react@0.462.0__q2fa58858.js",
+   "size": 124,
+   "modes": [
+    "cors"
+   ]
+  },
+  {
+   "url": "https://esm.sh/unicornstudio-react@2.1.4-1?external=react,react-dom",
+   "method": "GET",
+   "status": 200,
+   "contentType": "application/javascript; charset=utf-8",
+   "headers": {
+    "access-control-allow-origin": "*",
+    "access-control-expose-headers": "X-ESM-Path, X-TypeScript-Types",
+    "content-type": "application/javascript; charset=utf-8",
+    "priority": "u=1,i=?0",
+    "x-esm-path": "/unicornstudio-react@2.1.4-1/X-ZXJlYWN0LHJlYWN0LWRvbQ/es2022/unicornstudio-react.mjs",
+    "x-typescript-types": "https://esm.sh/unicornstudio-react@2.1.4-1/X-ZXJlYWN0LHJlYWN0LWRvbQ/dist/index.d.ts"
+   },
+   "resourceType": "script",
+   "passes": [
+    "desktop",
+    "mobile"
+   ],
+   "file": "assets/esm.sh/unicornstudio-react@2.1.4-1__q2fa58858.js",
+   "size": 257,
+   "modes": [
+    "cors"
+   ]
+  },
+  {
+   "url": "https://esm.sh/unicornstudio-react@2.1.4-1/X-ZXJlYWN0LHJlYWN0LWRvbQ/es2022/unicornstudio-react.mjs",
+   "method": "GET",
+   "status": 200,
+   "contentType": "application/javascript; charset=utf-8",
+   "headers": {
+    "access-control-allow-origin": "*",
+    "content-type": "application/javascript; charset=utf-8",
+    "priority": "u=1,i=?0"
+   },
+   "resourceType": "script",
+   "passes": [
+    "desktop",
+    "mobile"
+   ],
+   "file": "assets/esm.sh/unicornstudio-react@2.1.4-1/X-ZXJlYWN0LHJlYWN0LWRvbQ/es2022/unicornstudio-react.mjs",
+   "size": 6542,
+   "modes": [
+    "cors"
+   ]
+  },
+  {
+   "url": "https://esm.sh/lucide-react@0.462.0/X-ZXJlYWN0LHJlYWN0LWRvbQ/es2022/lucide-react.mjs",
+   "method": "GET",
+   "status": 200,
+   "contentType": "application/javascript; charset=utf-8",
+   "headers": {
+    "access-control-allow-origin": "*",
+    "content-type": "application/javascript; charset=utf-8",
+    "priority": "u=1,i=?0"
+   },
+   "resourceType": "script",
+   "passes": [
+    "desktop",
+    "mobile"
+   ],
+   "file": "assets/esm.sh/lucide-react@0.462.0/X-ZXJlYWN0LHJlYWN0LWRvbQ/es2022/lucide-react.mjs",
+   "size": 598389,
+   "modes": [
+    "cors"
+   ]
+  },
+  {
+   "url": "https://esm.sh/react@18.3.1&dev/jsx-runtime",
+   "method": "GET",
+   "status": 200,
+   "contentType": "application/javascript; charset=utf-8",
+   "headers": {
+    "access-control-allow-origin": "*",
+    "access-control-expose-headers": "X-ESM-Path, X-TypeScript-Types",
+    "content-type": "application/javascript; charset=utf-8",
+    "priority": "u=1,i=?0",
+    "x-esm-path": "/react@18.3.1/es2022/jsx-runtime.development.mjs",
+    "x-typescript-types": "https://esm.sh/@types/react@~18.3.26/jsx-runtime.d.ts"
+   },
+   "resourceType": "script",
+   "passes": [
+    "desktop",
+    "mobile"
+   ],
+   "file": "assets/esm.sh/react@18.3.1&dev/jsx-runtime.js",
+   "size": 235,
+   "modes": [
+    "cors"
+   ]
+  },
+  {
+   "url": "https://esm.sh/react@18.3.1/es2022/jsx-runtime.development.mjs",
+   "method": "GET",
+   "status": 200,
+   "contentType": "application/javascript; charset=utf-8",
+   "headers": {
+    "access-control-allow-origin": "*",
+    "content-type": "application/javascript; charset=utf-8",
+    "priority": "u=1,i=?0"
+   },
+   "resourceType": "script",
+   "passes": [
+    "desktop",
+    "mobile"
+   ],
+   "file": "assets/esm.sh/react@18.3.1/es2022/jsx-runtime.development.mjs",
+   "size": 39375,
+   "modes": [
+    "cors"
+   ]
+  },
+  {
+   "url": "https://esm.sh/react-router-dom@6.28.0?external=react%2Creact-dom",
+   "method": "GET",
+   "status": 200,
+   "contentType": "application/javascript; charset=utf-8",
+   "headers": {
+    "access-control-allow-origin": "*",
+    "access-control-expose-headers": "X-ESM-Path, X-TypeScript-Types",
+    "content-type": "application/javascript; charset=utf-8",
+    "priority": "u=1,i=?0",
+    "x-esm-path": "/react-router-dom@6.28.0/X-ZXJlYWN0LHJlYWN0LWRvbQ/es2022/react-router-dom.mjs",
+    "x-typescript-types": "https://esm.sh/react-router-dom@6.28.0/X-ZXJlYWN0LHJlYWN0LWRvbQ/dist/index.d.ts"
+   },
+   "resourceType": "script",
+   "passes": [
+    "desktop",
+    "mobile"
+   ],
+   "file": "assets/esm.sh/react-router-dom@6.28.0__q8d8aa02b.js",
+   "size": 254,
+   "modes": [
+    "cors"
+   ]
+  },
+  {
+   "url": "https://esm.sh/react-router@6.28.0/X-ZXJlYWN0/es2022/react-router.mjs",
+   "method": "GET",
+   "status": 200,
+   "contentType": "application/javascript; charset=utf-8",
+   "headers": {
+    "access-control-allow-origin": "*",
+    "content-type": "application/javascript; charset=utf-8",
+    "priority": "u=1,i=?0"
+   },
+   "resourceType": "script",
+   "passes": [
+    "desktop",
+    "mobile"
+   ],
+   "file": "assets/esm.sh/react-router@6.28.0/X-ZXJlYWN0/es2022/react-router.mjs",
+   "size": 17978,
+   "modes": [
+    "cors"
+   ]
+  },
+  {
+   "url": "https://esm.sh/@remix-run/router@1.21.0/es2022/router.mjs",
+   "method": "GET",
+   "status": 200,
+   "contentType": "application/javascript; charset=utf-8",
+   "headers": {
+    "access-control-allow-origin": "*",
+    "content-type": "application/javascript; charset=utf-8",
+    "priority": "u=1,i=?0"
+   },
+   "resourceType": "script",
+   "passes": [
+    "desktop",
+    "mobile"
+   ],
+   "file": "assets/esm.sh/@remix-run/router@1.21.0/es2022/router.mjs",
+   "size": 58979,
+   "modes": [
+    "cors"
+   ]
+  },
+  {
+   "url": "https://esm.sh/react-router-dom@6.28.0/X-ZXJlYWN0LHJlYWN0LWRvbQ/es2022/react-router-dom.mjs",
+   "method": "GET",
+   "status": 200,
+   "contentType": "application/javascript; charset=utf-8",
+   "headers": {
+    "access-control-allow-origin": "*",
+    "content-type": "application/javascript; charset=utf-8",
+    "priority": "u=1,i=?0"
+   },
+   "resourceType": "script",
+   "passes": [
+    "desktop",
+    "mobile"
+   ],
+   "file": "assets/esm.sh/react-router-dom@6.28.0/X-ZXJlYWN0LHJlYWN0LWRvbQ/es2022/react-router-dom.mjs",
+   "size": 20218,
+   "modes": [
+    "cors"
+   ]
+  },
+  {
+   "url": "https://api.iconify.design/solar.json?icons=arrow-right-linear%2Cchart-linear%2Cdiamonds-linear%2Chamburger-menu-linear%2Cinfinity-linear%2Clayers-linear%2Cpulse-2-linear%2Crefresh-linear%2Croutes-linear%2Cshield-linear",
+   "method": "GET",
+   "status": 200,
+   "contentType": "application/json; charset=utf-8",
+   "headers": {
+    "access-control-allow-headers": "Origin, X-Requested-With, Content-Type, Accept, Accept-Encoding",
+    "access-control-allow-methods": "GET, OPTIONS",
+    "access-control-allow-origin": "*",
+    "access-control-max-age": "86400",
+    "content-type": "application/json; charset=utf-8"
+   },
+   "resourceType": "fetch",
+   "passes": [
+    "desktop",
+    "mobile"
+   ],
+   "file": "assets/api.iconify.design/solar__qd49be1e9.json",
+   "size": 4639,
+   "modes": [
+    "cors"
+   ]
+  },
+  {
+   "url": "https://aura-cloud.aura.build/favicon.ico",
+   "method": "GET",
+   "status": 200,
+   "contentType": "image/vnd.microsoft.icon",
+   "headers": {
+    "cache-status": "\"Netlify Edge\"; fwd=miss; fwd-status=200; stored",
+    "content-type": "image/vnd.microsoft.icon",
+    "referrer-policy": "strict-origin-when-cross-origin",
+    "x-nf-request-id": "01M3DC2NXR96SPWQ09FD3PFJSK"
+   },
+   "resourceType": "other",
+   "passes": [
+    "desktop"
+   ],
+   "file": "assets/aura-cloud.aura.build/favicon.ico",
+   "size": 696
+  }
+ ],
+ "adapter": {
+  "name": "aura-react",
+  "notes": [
+   "sandbox React virou o documento principal; 2 módulos gravados (97 KB)"
+  ]
+ },
+ "videos": {
+  "posters": {},
+  "onlineHosts": []
+ }
+}

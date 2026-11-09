@@ -1,0 +1,481 @@
+{
+ "entryUrl": "https://aura-cloud.aura.build/",
+ "capturedAt": "2026-09-25T22:47:41+00:00",
+ "indexHtml": {
+  "kind": "arquivo",
+  "description": "site vivo aberto com duplo clique (file://): um runtime faz o papel do Service Worker; imagens e vídeos que a página só exibe são lidos de assets/, o resto (CSS, JS, fontes, dados, imagens de WebGL) vai embutido no index.html"
+ },
+ "files": [
+  {
+   "url": "https://aura-cloud.aura.build/__wd3/aura-modules.json",
+   "file": "assets/aura-cloud.aura.build/__wd3/aura-modules.json",
+   "type": "application/json",
+   "resourceType": "fetch",
+   "size": 99833,
+   "status": 200,
+   "party": "first",
+   "passes": [
+    "desktop",
+    "mobile"
+   ]
+  },
+  {
+   "url": "https://aura-cloud.aura.build/favicon.ico",
+   "file": "assets/aura-cloud.aura.build/favicon.ico",
+   "type": "image/vnd.microsoft.icon",
+   "resourceType": "other",
+   "size": 696,
+   "status": 200,
+   "party": "first",
+   "passes": [
+    "desktop"
+   ]
+  },
+  {
+   "url": "https://aura-cloud.aura.build/",
+   "file": "assets/aura-cloud.aura.build/index.html",
+   "type": "text/html",
+   "resourceType": "document",
+   "size": 140014,
+   "status": 200,
+   "party": "first",
+   "passes": [
+    "desktop",
+    "mobile"
+   ]
+  },
+  {
+   "url": "https://api.iconify.design/solar.json?icons=arrow-right-linear%2Cchart-linear%2Cdiamonds-linear%2Chamburger-menu-linear%2Cinfinity-linear%2Clayers-linear%2Cpulse-2-linear%2Crefresh-linear%2Croutes-linear%2Cshield-linear",
+   "file": "assets/api.iconify.design/solar__qd49be1e9.json",
+   "type": "application/json",
+   "resourceType": "fetch",
+   "size": 4639,
+   "status": 200,
+   "party": "third",
+   "passes": [
+    "desktop",
+    "mobile"
+   ]
+  },
+  {
+   "url": "https://cdn.tailwindcss.com/3.4.17",
+   "file": "assets/cdn.tailwindcss.com/3.4.17.js",
+   "type": "text/javascript",
+   "resourceType": "script",
+   "size": 407279,
+   "status": 200,
+   "party": "third",
+   "passes": [
+    "mobile",
+    "desktop"
+   ],
+   "library": {
+    "name": "tailwindcss (Play CDN)",
+    "version": "3.4.17"
+   },
+   "role": "library"
+  },
+  {
+   "url": "https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.7/ScrollTrigger.min.js",
+   "file": "assets/cdnjs.cloudflare.com/ajax/libs/gsap/3.12.7/ScrollTrigger.min.js",
+   "type": "application/javascript",
+   "resourceType": "script",
+   "size": 43974,
+   "status": 200,
+   "party": "third",
+   "passes": [
+    "mobile",
+    "desktop"
+   ],
+   "library": {
+    "name": "gsap",
+    "version": "3.12.7"
+   },
+   "role": "library"
+  },
+  {
+   "url": "https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.7/gsap.min.js",
+   "file": "assets/cdnjs.cloudflare.com/ajax/libs/gsap/3.12.7/gsap.min.js",
+   "type": "application/javascript",
+   "resourceType": "script",
+   "size": 72304,
+   "status": 200,
+   "party": "third",
+   "passes": [
+    "mobile",
+    "desktop"
+   ],
+   "library": {
+    "name": "gsap",
+    "version": "3.12.7"
+   },
+   "role": "library"
+  },
+  {
+   "url": "https://code.iconify.design/iconify-icon/3.0.0/iconify-icon.min.js",
+   "file": "assets/code.iconify.design/iconify-icon/3.0.0/iconify-icon.min.js",
+   "type": "application/javascript",
+   "resourceType": "script",
+   "size": 22273,
+   "status": 200,
+   "party": "third",
+   "passes": [
+    "mobile",
+    "desktop"
+   ],
+   "library": {
+    "name": "iconify",
+    "version": "3.0.0"
+   },
+   "role": "library"
+  },
+  {
+   "url": "https://esm.sh/@remix-run/router@1.21.0/es2022/router.mjs",
+   "file": "assets/esm.sh/@remix-run/router@1.21.0/es2022/router.mjs",
+   "type": "application/javascript",
+   "resourceType": "script",
+   "size": 58979,
+   "status": 200,
+   "party": "third",
+   "passes": [
+    "desktop",
+    "mobile"
+   ],
+   "role": "third-party"
+  },
+  {
+   "url": "https://esm.sh/lucide-react@0.462.0/X-ZXJlYWN0LHJlYWN0LWRvbQ/es2022/lucide-react.mjs",
+   "file": "assets/esm.sh/lucide-react@0.462.0/X-ZXJlYWN0LHJlYWN0LWRvbQ/es2022/lucide-react.mjs",
+   "type": "application/javascript",
+   "resourceType": "script",
+   "size": 598389,
+   "status": 200,
+   "party": "third",
+   "passes": [
+    "desktop",
+    "mobile"
+   ],
+   "library": {
+    "name": "lucide",
+    "version": "0.462.0"
+   },
+   "role": "library"
+  },
+  {
+   "url": "https://esm.sh/lucide-react@0.462.0?external=react,react-dom",
+   "file": "assets/esm.sh/lucide-react@0.462.0__q2fa58858.js",
+   "type": "application/javascript",
+   "resourceType": "script",
+   "size": 124,
+   "status": 200,
+   "party": "third",
+   "passes": [
+    "desktop",
+    "mobile"
+   ],
+   "library": {
+    "name": "lucide",
+    "version": "0.462.0"
+   },
+   "role": "library"
+  },
+  {
+   "url": "https://esm.sh/react-dom@18.3.1/X-ZXJlYWN0/es2022/cjs/react-dom.development.development.mjs",
+   "file": "assets/esm.sh/react-dom@18.3.1/X-ZXJlYWN0/es2022/cjs/react-dom.development.development.mjs",
+   "type": "application/javascript",
+   "resourceType": "script",
+   "size": 916708,
+   "status": 200,
+   "party": "third",
+   "passes": [
+    "desktop",
+    "mobile"
+   ],
+   "library": {
+    "name": "react-dom",
+    "version": "18.3.1"
+   },
+   "role": "library"
+  },
+  {
+   "url": "https://esm.sh/react-dom@18.3.1/X-ZXJlYWN0/es2022/client.development.mjs",
+   "file": "assets/esm.sh/react-dom@18.3.1/X-ZXJlYWN0/es2022/client.development.mjs",
+   "type": "application/javascript",
+   "resourceType": "script",
+   "size": 3056,
+   "status": 200,
+   "party": "third",
+   "passes": [
+    "desktop",
+    "mobile"
+   ],
+   "library": {
+    "name": "react-dom",
+    "version": "18.3.1"
+   },
+   "role": "library"
+  },
+  {
+   "url": "https://esm.sh/react-dom@18.3.1/X-ZXJlYWN0/es2022/react-dom.development.mjs",
+   "file": "assets/esm.sh/react-dom@18.3.1/X-ZXJlYWN0/es2022/react-dom.development.mjs",
+   "type": "application/javascript",
+   "resourceType": "script",
+   "size": 3013,
+   "status": 200,
+   "party": "third",
+   "passes": [
+    "desktop",
+    "mobile"
+   ],
+   "library": {
+    "name": "react-dom",
+    "version": "18.3.1"
+   },
+   "role": "library"
+  },
+  {
+   "url": "https://esm.sh/react-dom@18.3.1/client?dev&external=react",
+   "file": "assets/esm.sh/react-dom@18.3.1/client__q161831d8.js",
+   "type": "application/javascript",
+   "resourceType": "script",
+   "size": 273,
+   "status": 200,
+   "party": "third",
+   "passes": [
+    "desktop",
+    "mobile"
+   ],
+   "library": {
+    "name": "react-dom",
+    "version": "18.3.1"
+   },
+   "role": "library"
+  },
+  {
+   "url": "https://esm.sh/react-dom@18.3.1?dev&external=react",
+   "file": "assets/esm.sh/react-dom@18.3.1__q161831d8.js",
+   "type": "application/javascript",
+   "resourceType": "script",
+   "size": 288,
+   "status": 200,
+   "party": "third",
+   "passes": [
+    "desktop",
+    "mobile"
+   ],
+   "library": {
+    "name": "react-dom",
+    "version": "18.3.1"
+   },
+   "role": "library"
+  },
+  {
+   "url": "https://esm.sh/react-router-dom@6.28.0/X-ZXJlYWN0LHJlYWN0LWRvbQ/es2022/react-router-dom.mjs",
+   "file": "assets/esm.sh/react-router-dom@6.28.0/X-ZXJlYWN0LHJlYWN0LWRvbQ/es2022/react-router-dom.mjs",
+   "type": "application/javascript",
+   "resourceType": "script",
+   "size": 20218,
+   "status": 200,
+   "party": "third",
+   "passes": [
+    "desktop",
+    "mobile"
+   ],
+   "library": {
+    "name": "react-router",
+    "version": "6.28.0"
+   },
+   "role": "library"
+  },
+  {
+   "url": "https://esm.sh/react-router-dom@6.28.0?external=react%2Creact-dom",
+   "file": "assets/esm.sh/react-router-dom@6.28.0__q8d8aa02b.js",
+   "type": "application/javascript",
+   "resourceType": "script",
+   "size": 254,
+   "status": 200,
+   "party": "third",
+   "passes": [
+    "desktop",
+    "mobile"
+   ],
+   "library": {
+    "name": "react-router",
+    "version": "6.28.0"
+   },
+   "role": "library"
+  },
+  {
+   "url": "https://esm.sh/react-router@6.28.0/X-ZXJlYWN0/es2022/react-router.mjs",
+   "file": "assets/esm.sh/react-router@6.28.0/X-ZXJlYWN0/es2022/react-router.mjs",
+   "type": "application/javascript",
+   "resourceType": "script",
+   "size": 17978,
+   "status": 200,
+   "party": "third",
+   "passes": [
+    "desktop",
+    "mobile"
+   ],
+   "library": {
+    "name": "react-router",
+    "version": "6.28.0"
+   },
+   "role": "library"
+  },
+  {
+   "url": "https://esm.sh/react@18.3.1&dev/jsx-runtime",
+   "file": "assets/esm.sh/react@18.3.1&dev/jsx-runtime.js",
+   "type": "application/javascript",
+   "resourceType": "script",
+   "size": 235,
+   "status": 200,
+   "party": "third",
+   "passes": [
+    "desktop",
+    "mobile"
+   ],
+   "library": {
+    "name": "react",
+    "version": "18.3.1"
+   },
+   "role": "library"
+  },
+  {
+   "url": "https://esm.sh/react@18.3.1/es2022/jsx-runtime.development.mjs",
+   "file": "assets/esm.sh/react@18.3.1/es2022/jsx-runtime.development.mjs",
+   "type": "application/javascript",
+   "resourceType": "script",
+   "size": 39375,
+   "status": 200,
+   "party": "third",
+   "passes": [
+    "desktop",
+    "mobile"
+   ],
+   "library": {
+    "name": "react",
+    "version": "18.3.1"
+   },
+   "role": "library"
+  },
+  {
+   "url": "https://esm.sh/react@18.3.1/es2022/react.development.mjs",
+   "file": "assets/esm.sh/react@18.3.1/es2022/react.development.mjs",
+   "type": "application/javascript",
+   "resourceType": "script",
+   "size": 80361,
+   "status": 200,
+   "party": "third",
+   "passes": [
+    "desktop",
+    "mobile"
+   ],
+   "library": {
+    "name": "react",
+    "version": "18.3.1"
+   },
+   "role": "library"
+  },
+  {
+   "url": "https://esm.sh/react@18.3.1?dev",
+   "file": "assets/esm.sh/react@18.3.1__q34c6fcec.js",
+   "type": "application/javascript",
+   "resourceType": "script",
+   "size": 158,
+   "status": 200,
+   "party": "third",
+   "passes": [
+    "desktop",
+    "mobile"
+   ],
+   "library": {
+    "name": "react",
+    "version": "18.3.1"
+   },
+   "role": "library"
+  },
+  {
+   "url": "https://esm.sh/scheduler@0.23.2/es2022/scheduler.development.mjs",
+   "file": "assets/esm.sh/scheduler@0.23.2/es2022/scheduler.development.mjs",
+   "type": "application/javascript",
+   "resourceType": "script",
+   "size": 20237,
+   "status": 200,
+   "party": "third",
+   "passes": [
+    "desktop",
+    "mobile"
+   ],
+   "role": "third-party"
+  },
+  {
+   "url": "https://esm.sh/scheduler@%5E0.23.2?target=es2022&dev",
+   "file": "assets/esm.sh/scheduler@^0.23.2__qe16f0dd6.js",
+   "type": "application/javascript",
+   "resourceType": "script",
+   "size": 178,
+   "status": 200,
+   "party": "third",
+   "passes": [
+    "desktop",
+    "mobile"
+   ],
+   "role": "third-party"
+  },
+  {
+   "url": "https://esm.sh/unicornstudio-react@2.1.4-1/X-ZXJlYWN0LHJlYWN0LWRvbQ/es2022/unicornstudio-react.mjs",
+   "file": "assets/esm.sh/unicornstudio-react@2.1.4-1/X-ZXJlYWN0LHJlYWN0LWRvbQ/es2022/unicornstudio-react.mjs",
+   "type": "application/javascript",
+   "resourceType": "script",
+   "size": 6542,
+   "status": 200,
+   "party": "third",
+   "passes": [
+    "desktop",
+    "mobile"
+   ],
+   "library": {
+    "name": "unicornstudio",
+    "version": null
+   },
+   "role": "library"
+  },
+  {
+   "url": "https://esm.sh/unicornstudio-react@2.1.4-1?external=react,react-dom",
+   "file": "assets/esm.sh/unicornstudio-react@2.1.4-1__q2fa58858.js",
+   "type": "application/javascript",
+   "resourceType": "script",
+   "size": 257,
+   "status": 200,
+   "party": "third",
+   "passes": [
+    "desktop",
+    "mobile"
+   ],
+   "library": {
+    "name": "unicornstudio",
+    "version": null
+   },
+   "role": "library"
+  },
+  {
+   "url": "https://unpkg.com/@babel/standalone@7.24.0/babel.min.js",
+   "file": "assets/unpkg.com/@babel/standalone@7.24.0/babel.min.js",
+   "type": "text/javascript",
+   "resourceType": "script",
+   "size": 2867392,
+   "status": 200,
+   "party": "third",
+   "passes": [
+    "mobile",
+    "desktop"
+   ],
+   "library": {
+    "name": "babel-standalone",
+    "version": "7.24.0"
+   },
+   "role": "library"
+  }
+ ]
+}

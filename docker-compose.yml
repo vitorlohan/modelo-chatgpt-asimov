@@ -1,0 +1,24 @@
+name: modelo-chatgpt
+
+services:
+  db:
+    image: postgres:16-alpine
+    container_name: modelo-chatgpt-db
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-chatgpt}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?Defina POSTGRES_PASSWORD no arquivo .env da raiz}
+      POSTGRES_DB: ${POSTGRES_DB:-modelo_chatgpt}
+    ports:
+      # 5435 no host para não conflitar com os outros Postgres (5432, 5433, 5434)
+      - "${POSTGRES_PORT:-5435}:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $${POSTGRES_USER} -d $${POSTGRES_DB}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+volumes:
+  pgdata:

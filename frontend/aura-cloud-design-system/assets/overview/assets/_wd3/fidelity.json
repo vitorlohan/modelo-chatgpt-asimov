@@ -1,0 +1,58 @@
+{
+ "validatedAt": "2026-09-25T22:48:53+00:00",
+ "kind": "arquivo",
+ "verdict": "passou",
+ "blank": false,
+ "similarity": {
+  "mean": 0.956,
+  "desktop": [
+   0.939,
+   0.964,
+   0.948,
+   0.954
+  ],
+  "mobile": [
+   0.947,
+   0.975,
+   0.966,
+   0.953
+  ]
+ },
+ "misses": {
+  "crítica": [],
+  "média": [],
+  "leve": []
+ },
+ "missCounts": {
+  "crítica": 0,
+  "média": 0,
+  "leve": 0
+ },
+ "newPageErrors": [],
+ "blockedPasses": [],
+ "static": null,
+ "passes": {
+  "desktop": {
+   "started": true,
+   "pageErrors": [],
+   "consoleErrors": 0,
+   "similarity": [
+    0.939,
+    0.964,
+    0.948,
+    0.954
+   ]
+  },
+  "mobile": {
+   "started": true,
+   "pageErrors": [],
+   "consoleErrors": 0,
+   "similarity": [
+    0.947,
+    0.975,
+    0.966,
+    0.953
+   ]
+  }
+ }
+}

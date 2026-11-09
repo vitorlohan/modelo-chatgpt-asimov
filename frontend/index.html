@@ -1,0 +1,1049 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Aura Chat</title>
+<style>
+/* =========================================================
+   Tokens — extraídos do Aura Design System
+   ========================================================= */
+:root {
+  /* Marca e acento */
+  --cyan-500: #06b6d4;
+  --teal-500: #14b8a6;
+  --emerald-500: #10b981;
+  --cyan-400: #22d3ee;
+  --teal-400: #2dd4bf;
+  --cyan-300: #67e8f9;
+  --teal-300: #5eead4;
+
+  /* Superfícies */
+  --page: #000;
+  --glass-panel: rgba(0, 0, 0, 0.6);
+  --header-glass: rgba(0, 0, 0, 0.4);
+  --button-core: rgba(0, 0, 0, 0.8);
+  --frosted-tile: rgba(255, 255, 255, 0.03);
+  --soft-fill: rgba(255, 255, 255, 0.05);
+
+  /* Texto */
+  --text: #fff;
+  --text-2: #9ca3af;   /* gray-400 */
+  --text-3: #6b7280;   /* gray-500 */
+  --text-reply: #d1d5db; /* gray-300 */
+
+  /* Bordas */
+  --hairline: rgba(255, 255, 255, 0.05);
+  --outline: rgba(255, 255, 255, 0.1);
+  --corner: rgba(255, 255, 255, 0.2);
+  --ring: linear-gradient(to bottom, rgba(255,255,255,.15), rgba(255,255,255,.05), transparent);
+  --ring-strong: linear-gradient(to bottom, rgba(255,255,255,.2), rgba(255,255,255,.05), transparent);
+  --ring-strong-hover: linear-gradient(to bottom, rgba(255,255,255,.3), rgba(255,255,255,.05), transparent);
+
+  /* Movimento (equivalentes CSS das eases GSAP) */
+  --power4-out: cubic-bezier(0.165, 0.84, 0.44, 1);
+  --power3-out: cubic-bezier(0.215, 0.61, 0.355, 1);
+  --power2-out: cubic-bezier(0.25, 0.46, 0.45, 0.94);
+
+  --font: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  --mono: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+
+  --col: 48rem;           /* largura da coluna de conversa */
+  color-scheme: dark;
+}
+
+* { box-sizing: border-box; }
+html, body { height: 100%; margin: 0; }
+html { background: var(--page); }
+body {
+  background: var(--page);
+  color: var(--text);
+  font-family: var(--font);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  overflow: hidden;
+}
+::selection { background: rgba(6, 182, 212, 0.3); color: #fff; }
+button, textarea { font: inherit; color: inherit; }
+svg.icon { width: 1em; height: 1em; display: block; flex: none; }
+
+/* =========================================================
+   Camadas de fundo: flow field WebGL, blobs, frame
+   ========================================================= */
+#bg-canvas {
+  position: fixed; inset: 0; width: 100%; height: 100%;
+  transform: scale(1.1); pointer-events: none; z-index: 0;
+}
+.blobs { position: fixed; inset: 0; z-index: 1; overflow: hidden; pointer-events: none; }
+.blob { position: absolute; border-radius: 9999px; filter: blur(140px); }
+.blob-1 { top: 8%; left: -10rem; width: 30rem; height: 30rem; background: rgba(8, 145, 178, 0.1); }
+.blob-2 { top: 30%; right: -10rem; width: 28rem; height: 28rem; background: rgba(13, 148, 136, 0.1); }
+.blob-3 { bottom: -8rem; left: 20%; width: 26rem; height: 26rem; background: rgba(34, 211, 238, 0.1); }
+
+/* Scrim: escurece o centro (onde fica o texto) para manter a leitura sobre as linhas */
+.scrim {
+  position: fixed; inset: 0; z-index: 1; pointer-events: none;
+  background: radial-gradient(ellipse 38rem 75% at 50% 55%, rgba(0,0,0,.6), rgba(0,0,0,.35) 60%, transparent 100%);
+}
+@media (max-width: 767px) { .scrim { background: rgba(0, 0, 0, 0.45); } }
+
+/* Escurece o topo e a base para as mensagens "sumirem" sob a navbar e o compositor */
+.fade-top, .fade-bottom { position: fixed; left: 0; right: 0; z-index: 3; pointer-events: none; }
+.fade-top { top: 0; height: 140px; background: linear-gradient(to bottom, #000 30%, transparent); }
+.fade-bottom { bottom: 0; height: 220px; background: linear-gradient(to top, #000 45%, transparent); }
+
+/* Page frame: bordas laterais white/5 com quadrados nos cantos */
+.frame {
+  position: fixed; top: 0; bottom: 0; left: 0; right: 0;
+  max-width: 90rem; margin: 0 auto; z-index: 2; pointer-events: none;
+  border-left: 1px solid var(--hairline); border-right: 1px solid var(--hairline);
+}
+.frame::before, .frame::after {
+  content: ""; position: absolute; top: -4px; width: 8px; height: 8px;
+  background: #000; border: 1px solid var(--corner);
+}
+.frame::before { left: -4px; }
+.frame::after { right: -4px; }
+
+/* Orbes de vidro flutuantes (visíveis a partir de xl) */
+.orb {
+  position: fixed; z-index: 2; border-radius: 9999px; pointer-events: none;
+  border: 1px solid var(--outline);
+  backdrop-filter: blur(24px); -webkit-backdrop-filter: blur(24px);
+  opacity: 0; transform: scale(.8);
+  transition: opacity 1.2s var(--power3-out), transform 1.2s var(--power3-out);
+  display: none;
+}
+.orb.is-in { opacity: 1; transform: scale(1); }
+.orb-a { width: 7rem; height: 7rem; right: 7%; top: 26%; background: linear-gradient(to bottom right, rgba(255,255,255,.1), rgba(255,255,255,.02)); }
+.orb-a::before { content: ""; position: absolute; inset: 12px; border-radius: inherit; border: 1px solid rgba(34, 211, 238, 0.2); }
+.orb-a::after {
+  content: ""; position: absolute; inset: 0; border-radius: inherit; filter: blur(4px);
+  background: radial-gradient(circle at 35% 35%, rgba(255,255,255,.18), transparent 28%),
+              radial-gradient(circle at 70% 70%, rgba(6,182,212,.18), transparent 38%);
+}
+.orb-b { width: 5rem; height: 5rem; left: 8%; top: 58%; background: linear-gradient(to bottom right, rgba(20,184,166,.1), transparent); }
+.float-a { animation: orbFloat 6s ease-in-out infinite; }
+.float-b { animation: orbFloat 7.5s ease-in-out 1s infinite; }
+@keyframes orbFloat {
+  0%, 100% { translate: 0 0; }
+  25% { translate: 4px -10px; }
+  50% { translate: -6px 6px; }
+  75% { translate: 3px -6px; }
+}
+@media (min-width: 1280px) { .orb { display: block; } }
+
+/* =========================================================
+   Navbar pill
+   ========================================================= */
+.nav-wrap {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 20;
+  max-width: 90rem; margin: 0 auto; padding: 24px 16px 0;
+}
+@media (min-width: 768px) { .nav-wrap { padding: 32px 48px 0; } }
+.ring-pill {
+  border-radius: 9999px; padding: 1px; background: var(--ring-strong);
+  position: relative; transition: background .5s;
+}
+.ring-pill::before { /* hover from-white/30 via sobreposição (gradiente não anima) */
+  content: ""; position: absolute; inset: 0; border-radius: inherit; background: var(--ring-strong-hover);
+  opacity: 0; transition: opacity .5s;
+}
+.ring-pill:hover::before { opacity: 1; }
+.navbar {
+  position: relative; display: flex; align-items: center; justify-content: space-between;
+  padding: 14px 16px 14px 24px; border-radius: 9999px;
+  background: var(--header-glass); border: 1px solid var(--hairline);
+  backdrop-filter: blur(24px); -webkit-backdrop-filter: blur(24px);
+  box-shadow: 0 0 30px rgba(255, 255, 255, 0.02);
+}
+.brand { display: flex; align-items: center; gap: 8px; text-decoration: none; color: #fff; }
+.brand svg { font-size: 22px; opacity: .8; transition: opacity .3s; }
+.brand:hover svg { opacity: 1; }
+.brand span { font-size: 14px; font-weight: 500; letter-spacing: .025em; }
+.nav-links {
+  display: none; align-items: center; gap: 40px;
+  font-size: 12px; font-weight: 500; letter-spacing: .1em; text-transform: uppercase; color: var(--text-2);
+}
+.nav-links span { transition: color .3s; }
+.nav-links .is-active { color: #fff; }
+.nav-links .model { display: inline-flex; align-items: center; gap: 8px; }
+.status-dot {
+  width: 6px; height: 6px; border-radius: 9999px; background: var(--cyan-400);
+  box-shadow: 0 0 12px rgba(34, 211, 238, 0.8);
+}
+@media (min-width: 768px) { .nav-links { display: flex; } }
+
+.btn-header {
+  display: inline-flex; align-items: center; gap: 8px;
+  border-radius: 9999px; border: 1px solid var(--outline); background: var(--soft-fill);
+  padding: 8px 18px; font-size: 12px; font-weight: 500; letter-spacing: .025em; text-transform: uppercase;
+  cursor: pointer; transition: background .3s;
+  backdrop-filter: blur(4px); -webkit-backdrop-filter: blur(4px);
+}
+.btn-header:hover { background: rgba(255, 255, 255, 0.1); }
+.btn-header svg { font-size: 14px; }
+
+/* =========================================================
+   Área da conversa
+   ========================================================= */
+#chat {
+  position: fixed; inset: 0; z-index: 4; overflow-y: auto; overflow-x: hidden;
+  padding: 128px 16px 200px; scroll-behavior: smooth;
+  scrollbar-width: thin; scrollbar-color: rgba(255,255,255,.1) transparent;
+}
+#chat::-webkit-scrollbar { width: 8px; }
+#chat::-webkit-scrollbar-thumb { background: rgba(255,255,255,.08); border-radius: 9999px; }
+.column { max-width: var(--col); margin: 0 auto; }
+
+/* ---------- Estado vazio (hero) ---------- */
+#hero { padding-top: 6vh; }
+#hero[hidden] { display: none; }
+.hero-label {
+  display: flex; align-items: center; gap: 8px; margin-bottom: 28px;
+  font-size: 12px; font-weight: 500; letter-spacing: .1em; text-transform: uppercase; color: var(--text-2);
+}
+.hero-label svg { font-size: 14px; }
+.display {
+  margin: 0 0 24px; font-weight: 500; letter-spacing: -0.025em; line-height: 1.05;
+  font-size: 48px; display: flex; flex-wrap: wrap; column-gap: 12px; row-gap: 8px;
+}
+@media (min-width: 768px) { .display { font-size: 60px; column-gap: 16px; } }
+.word { overflow: hidden; display: inline-flex; vertical-align: top; }
+.word > span { display: inline-block; padding-bottom: 8px; transform: translateY(110%); }
+.is-revealed .word > span { animation: reveal 1.4s var(--power4-out) forwards; animation-delay: calc(.2s + var(--i) * .12s); }
+@keyframes reveal { to { transform: translateY(0); } }
+
+.lead {
+  margin: 0 0 48px; max-width: 32rem; font-size: 14px; line-height: 1.625; color: var(--text-2); opacity: 0;
+}
+@media (min-width: 768px) { .lead { font-size: 16px; } }
+.is-revealed .lead { animation: fadeUp 1s var(--power2-out) .9s forwards; }
+@keyframes fadeUp { from { opacity: 0; transform: translateY(20px); } to { opacity: .9; transform: none; } }
+
+.eyebrow { font-size: 12px; letter-spacing: .25em; text-transform: uppercase; color: var(--text-3); margin-bottom: 16px; }
+
+/* Feature cards = sugestões */
+.cards { display: grid; grid-template-columns: 1fr; gap: 16px; perspective: 1200px; }
+@media (min-width: 768px) { .cards { grid-template-columns: repeat(3, 1fr); gap: 20px; } }
+.feature-card {
+  position: relative; border-radius: 16px; padding: 1px; background: var(--ring);
+  text-align: left; border: 0; cursor: pointer; opacity: 0; color: inherit;
+}
+.is-revealed .feature-card { animation: cardIn 1.1s var(--power3-out) forwards; animation-delay: calc(1.1s + var(--i) * .12s); }
+@keyframes cardIn {
+  from { opacity: 0; transform: translateY(80px) rotateY(6deg); }
+  to { opacity: 1; transform: none; }
+}
+.feature-card .body {
+  height: 100%; border-radius: 16px; padding: 24px;
+  background: var(--glass-panel); border: 1px solid var(--hairline);
+  backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+  transition: background .5s;
+}
+.feature-card:hover .body { background: rgba(0, 0, 0, 0.4); }
+.feature-card:focus-visible { outline: 2px solid rgba(34, 211, 238, .6); outline-offset: 3px; }
+.chip {
+  width: 44px; height: 44px; border-radius: 9999px; margin-bottom: 20px;
+  display: flex; align-items: center; justify-content: center; font-size: 22px;
+  transition: transform .5s;
+}
+.feature-card:hover .chip { transform: translateY(-4px) scale(1.1); }
+.chip-cyan { background: rgba(6,182,212,.1); border: 1px solid rgba(6,182,212,.2); color: var(--cyan-400); }
+.chip-teal { background: rgba(20,184,166,.1); border: 1px solid rgba(20,184,166,.2); color: var(--teal-400); }
+.chip-light { background: rgba(34,211,238,.1); border: 1px solid rgba(34,211,238,.2); color: var(--cyan-300); }
+.feature-card h3 { margin: 0 0 8px; font-size: 18px; font-weight: 500; letter-spacing: -0.025em; }
+.feature-card p { margin: 0; font-size: 14px; line-height: 1.625; color: var(--text-2); }
+
+/* ---------- Mensagens ---------- */
+#messages { display: flex; flex-direction: column; gap: 24px; }
+.msg { animation: msgIn .9s var(--power3-out) both; transform-origin: center bottom; }
+@keyframes msgIn {
+  from { opacity: 0; transform: translateY(30px) rotateX(6deg); }
+  to { opacity: 1; transform: none; }
+}
+
+/* Usuário: tile fosco */
+.msg-user { align-self: flex-end; max-width: 85%; }
+.msg-user .bubble {
+  border-radius: 16px; border: 1px solid var(--outline); background: var(--frosted-tile);
+  backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+  padding: 12px 18px; font-size: 15px; line-height: 1.6; white-space: pre-wrap; word-wrap: break-word;
+}
+
+/* Assistente: glass card com anel em gradiente + wash radial */
+.msg-ai { align-self: stretch; }
+.msg-ai .ring { position: relative; border-radius: 20px; padding: 1px; background: var(--ring); overflow: hidden; }
+.msg-ai .ring::before {
+  content: ""; position: absolute; inset: 0; pointer-events: none;
+  background: radial-gradient(circle at top left, rgba(6,182,212,.14), transparent 35%),
+              radial-gradient(circle at bottom right, rgba(20,184,166,.12), transparent 35%);
+}
+.msg-ai .card {
+  position: relative; border-radius: 20px; padding: 20px 24px 22px;
+  background: rgba(0, 0, 0, 0.72); border: 1px solid var(--hairline);
+  backdrop-filter: blur(24px); -webkit-backdrop-filter: blur(24px);
+  transition: background .5s;
+}
+.msg-ai .card:hover { background: rgba(0, 0, 0, 0.6); }
+.ai-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 14px; }
+.ai-id { display: flex; align-items: center; gap: 10px; }
+.ai-id .disc {
+  width: 28px; height: 28px; border-radius: 9999px; display: flex; align-items: center; justify-content: center;
+  border: 1px solid var(--outline); background: var(--soft-fill); font-size: 16px;
+}
+.micro { font-size: 10px; letter-spacing: .22em; text-transform: uppercase; color: var(--text-3); }
+.btn-ghost {
+  border: 0; background: none; cursor: pointer; padding: 4px 2px;
+  font-size: 10px; letter-spacing: .22em; text-transform: uppercase; color: var(--text-3); transition: color .3s;
+}
+.btn-ghost:hover { color: #fff; }
+
+/* Tipografia da resposta (markdown) */
+.reply { font-size: 15px; line-height: 1.7; color: var(--text-reply); word-wrap: break-word; }
+.reply > * { margin: 0 0 12px; }
+.reply > *:last-child { margin-bottom: 0; }
+.reply h3, .reply h4 { color: #fff; font-weight: 500; letter-spacing: -0.025em; margin-top: 20px; }
+.reply h3 { font-size: 20px; } .reply h4 { font-size: 16px; }
+.reply strong { color: #fff; font-weight: 600; }
+.reply a { color: var(--cyan-300); text-decoration: none; border-bottom: 1px solid rgba(103,232,249,.3); transition: border-color .3s; }
+.reply a:hover { border-color: var(--cyan-300); }
+.reply ul, .reply ol { padding-left: 22px; }
+.reply li { margin: 4px 0; }
+.reply li::marker { color: var(--teal-400); }
+.reply li.sub { list-style: none; position: relative; margin-left: 20px; color: var(--text-2); }
+.reply li.sub::before { content: ""; position: absolute; left: -14px; top: .75em; width: 5px; height: 5px; border-radius: 9999px; background: var(--cyan-400); box-shadow: 0 0 8px rgba(34,211,238,.6); }
+.reply ol { counter-reset: none; }
+.reply code {
+  font-family: var(--mono); font-size: 13px; color: var(--cyan-300);
+  background: var(--soft-fill); border: 1px solid var(--hairline); border-radius: 6px; padding: 1px 6px;
+}
+.reply pre {
+  position: relative; overflow-x: auto; border-radius: 16px; border: 1px solid var(--outline);
+  background: rgba(0, 0, 0, 0.4); padding: 16px 18px;
+}
+.reply pre code { background: none; border: 0; padding: 0; color: var(--text-reply); font-size: 13px; line-height: 1.6; }
+.reply .code-lang { display: block; margin-bottom: 10px; }
+.reply > * { animation: blockIn .7s var(--power3-out) both; animation-delay: calc(var(--i, 0) * 60ms); }
+@keyframes blockIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
+
+/* Indicador "pensando": anéis giratórios + pulse dots */
+.thinking { display: flex; align-items: center; gap: 14px; }
+.mini-rings { position: relative; width: 22px; height: 22px; border-radius: 9999px; border: 1px solid var(--outline); animation: spin 4s linear infinite; }
+.mini-rings::before { content: ""; position: absolute; inset: 4px; border-radius: inherit; border: 1px solid rgba(45,212,191,.4); }
+.mini-rings::after {
+  content: ""; position: absolute; inset: 0; border-radius: inherit; filter: blur(2px);
+  background: conic-gradient(from 0deg, rgba(6,182,212,.5), transparent, rgba(20,184,166,.5), transparent);
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+.dots { display: flex; gap: 8px; }
+.dots i { width: 6px; height: 6px; border-radius: 9999px; animation: pulse 1.4s ease-in-out infinite; }
+.dots i:nth-child(1) { background: var(--cyan-400); box-shadow: 0 0 20px rgba(34,211,238,.8); }
+.dots i:nth-child(2) { background: var(--teal-400); box-shadow: 0 0 20px rgba(45,212,191,.8); animation-delay: .18s; }
+.dots i:nth-child(3) { background: var(--cyan-300); box-shadow: 0 0 20px rgba(103,232,249,.8); animation-delay: .36s; }
+@keyframes pulse { 0%, 100% { opacity: .3; transform: translateY(0); } 50% { opacity: 1; transform: translateY(-4px); } }
+
+/* Erro */
+.msg-error .card { border-color: rgba(255,255,255,.1); }
+.err-title { color: #fff; font-size: 15px; font-weight: 500; margin: 0 0 6px; }
+.err-text { color: var(--text-2); font-size: 14px; line-height: 1.6; margin: 0 0 16px; }
+.btn-outline {
+  display: inline-flex; align-items: center; gap: 8px; cursor: pointer;
+  padding: 10px 22px; border-radius: 9999px; border: 1px solid var(--outline); background: transparent;
+  font-size: 14px; font-weight: 500; transition: background .3s;
+  backdrop-filter: blur(4px); -webkit-backdrop-filter: blur(4px);
+}
+.btn-outline:hover { background: var(--soft-fill); }
+.btn-outline svg { font-size: 16px; }
+
+/* =========================================================
+   Compositor (closing panel + primary CTA)
+   ========================================================= */
+.composer-wrap { position: fixed; left: 0; right: 0; bottom: 0; z-index: 10; padding: 0 16px 20px; }
+.composer-wrap .column { max-width: var(--col); }
+.composer-ring { position: relative; border-radius: 28px; padding: 1px; background: var(--ring-strong); transition: box-shadow .5s; }
+.composer-ring::before {
+  content: ""; position: absolute; inset: 0; border-radius: inherit; opacity: 0; transition: opacity .5s;
+  background: linear-gradient(to bottom, rgba(34,211,238,.45), rgba(20,184,166,.15), transparent);
+}
+.composer-ring:focus-within::before { opacity: 1; }
+.composer-ring:focus-within { box-shadow: 0 0 40px rgba(6, 182, 212, 0.08); }
+.composer {
+  position: relative; display: flex; align-items: flex-end; gap: 12px;
+  border-radius: 28px; padding: 10px 10px 10px 22px;
+  background: rgba(0, 0, 0, 0.6); border: 1px solid var(--hairline);
+  backdrop-filter: blur(24px); -webkit-backdrop-filter: blur(24px);
+  box-shadow: 0 0 30px rgba(255, 255, 255, 0.02);
+}
+.composer::before {
+  content: ""; position: absolute; inset: 0; border-radius: inherit; pointer-events: none;
+  background: radial-gradient(circle at 50% 0%, rgba(6,182,212,.1), transparent 40%),
+              radial-gradient(circle at 50% 100%, rgba(20,184,166,.08), transparent 45%);
+}
+#input {
+  position: relative; flex: 1; resize: none; border: 0; outline: 0; background: transparent;
+  font-size: 15px; line-height: 24px; padding: 10px 0; max-height: 200px; min-height: 44px;
+}
+#input::placeholder { color: var(--text-3); }
+
+/* Primary CTA: anel gradiente cyan→teal→cyan com glow desfocado */
+.btn-primary {
+  position: relative; flex: none; width: 44px; height: 44px; border-radius: 9999px; padding: 1px; border: 0; cursor: pointer;
+  background: linear-gradient(to right, rgba(6,182,212,.6), rgba(20,184,166,.6), rgba(6,182,212,.6));
+  transition: opacity .3s;
+}
+.btn-primary .glow {
+  position: absolute; inset: 0; border-radius: inherit; filter: blur(12px); opacity: .6; transition: opacity .5s;
+  background: linear-gradient(to right, rgba(6,182,212,.4), rgba(20,184,166,.4));
+}
+.btn-primary:hover .glow { opacity: 1; }
+.btn-primary .core {
+  position: relative; width: 100%; height: 100%; border-radius: inherit;
+  display: flex; align-items: center; justify-content: center; font-size: 18px;
+  background: var(--button-core); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+  transition: background .3s;
+}
+.btn-primary:hover .core { background: rgba(0, 0, 0, 0.6); }
+.btn-primary .core svg { transition: transform .4s var(--power3-out); }
+.btn-primary:hover .core svg { transform: translateX(2px); }
+.btn-primary:disabled { opacity: .35; cursor: not-allowed; }
+.btn-primary:disabled .glow { opacity: 0; }
+.btn-primary:focus-visible { outline: 2px solid rgba(34,211,238,.6); outline-offset: 3px; }
+
+.footnote { margin: 12px 0 0; text-align: center; font-size: 12px; color: var(--text-3); }
+.footnote kbd {
+  font-family: var(--mono); font-size: 11px; color: var(--text-2);
+  border: 1px solid var(--outline); border-radius: 4px; padding: 0 4px;
+}
+
+/* =========================================================
+   Autenticação (tela de login / cadastro)
+   ========================================================= */
+body.is-auth #hero, body.is-auth #messages, body.is-auth .composer-wrap { display: none !important; }
+body.is-auth .nav-actions { visibility: hidden; } /* mantém o espaço: os links do centro não se deslocam */
+body:not(.is-auth) #auth { display: none; }
+#auth { padding: 4vh 0 40px; }
+.auth-ring {
+  position: relative; max-width: 28rem; border-radius: 2rem; padding: 1px;
+  background: var(--ring-strong); overflow: hidden; opacity: 0;
+}
+.is-revealed .auth-ring { animation: cardIn 1.1s var(--power3-out) 1s forwards; }
+.auth-ring::before {
+  content: ""; position: absolute; inset: 0; pointer-events: none;
+  background: radial-gradient(circle at 50% 0%, rgba(6,182,212,.16), transparent 40%),
+              radial-gradient(circle at 50% 100%, rgba(20,184,166,.14), transparent 45%);
+}
+.auth-card {
+  position: relative; display: flex; flex-direction: column; gap: 18px;
+  border-radius: 2rem; border: 1px solid var(--hairline); background: rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(24px); -webkit-backdrop-filter: blur(24px); padding: 28px;
+}
+.tabs { display: flex; padding: 4px; border-radius: 9999px; border: 1px solid var(--outline); background: var(--frosted-tile); }
+.tab {
+  flex: 1; border: 0; background: transparent; cursor: pointer; border-radius: 9999px; padding: 9px 12px;
+  font-size: 12px; font-weight: 500; letter-spacing: .1em; text-transform: uppercase; color: var(--text-2);
+  transition: color .3s, background .3s;
+}
+.tab:hover { color: #fff; }
+.tab.is-active { color: #fff; background: rgba(255,255,255,.08); box-shadow: inset 0 0 0 1px rgba(255,255,255,.08); }
+.field { display: flex; flex-direction: column; gap: 8px; }
+.field input {
+  width: 100%; border-radius: 16px; border: 1px solid var(--outline); background: rgba(0, 0, 0, 0.4);
+  padding: 13px 16px; font-size: 15px; outline: 0; transition: border-color .3s, box-shadow .3s, background .3s;
+}
+.field input:focus {
+  border-color: rgba(34, 211, 238, 0.45); background: rgba(0, 0, 0, 0.55);
+  box-shadow: 0 0 0 4px rgba(6,182,212,.08), 0 0 24px rgba(6,182,212,.12);
+}
+.auth-hint { margin: -6px 0 0; font-size: 12px; line-height: 1.5; color: var(--text-3); }
+.auth-error { margin: 0; font-size: 13px; line-height: 1.5; color: #fda4af; }
+.auth-hint:empty, .auth-error:empty { display: none; }
+
+/* CTA largo — variante "closing" do Primary CTA (cyan → teal → emerald) */
+.btn-cta {
+  position: relative; display: block; width: 100%; border: 0; padding: 1px; margin-top: 4px;
+  border-radius: 9999px; cursor: pointer;
+  background: linear-gradient(to right, rgba(6,182,212,.6), rgba(20,184,166,.6), rgba(16,185,129,.6));
+}
+.btn-cta .glow {
+  position: absolute; inset: 0; border-radius: inherit; filter: blur(12px); opacity: .7; transition: opacity .5s;
+  background: linear-gradient(to right, rgba(6,182,212,.4), rgba(20,184,166,.4), rgba(16,185,129,.4));
+}
+.btn-cta:hover .glow { opacity: 1; }
+.btn-cta .core {
+  position: relative; display: flex; align-items: center; justify-content: center; gap: 8px;
+  border-radius: inherit; padding: 13px 24px; background: rgba(0, 0, 0, 0.85);
+  backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+  font-size: 14px; font-weight: 500; letter-spacing: .025em; transition: background .3s;
+}
+.btn-cta:hover .core { background: rgba(0, 0, 0, 0.6); }
+.btn-cta .core svg { font-size: 16px; transition: transform .4s var(--power3-out); }
+.btn-cta:hover .core svg { transform: translateX(3px); }
+.btn-cta:disabled { opacity: .5; cursor: progress; }
+.btn-cta:focus-visible, .tab:focus-visible { outline: 2px solid rgba(34,211,238,.6); outline-offset: 3px; }
+
+/* Navbar: usuário logado */
+.nav-actions { display: flex; align-items: center; gap: 8px; }
+.user-chip {
+  display: none; align-items: center; gap: 8px; margin-right: 8px;
+  font-size: 12px; font-weight: 500; letter-spacing: .1em; text-transform: uppercase; color: var(--text-2);
+}
+@media (min-width: 640px) { .user-chip { display: inline-flex; } }
+@media (max-width: 479px) { .btn-header .label { display: none; } .btn-header { padding: 8px 12px; } }
+
+/* =========================================================
+   Movimento reduzido
+   ========================================================= */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: .01ms !important; animation-delay: 0s !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; }
+  .word > span { transform: none; }
+  .lead, .feature-card, .auth-ring { opacity: 1; }
+  #chat { scroll-behavior: auto; }
+}
+</style>
+</head>
+<body class="is-auth">
+
+<canvas id="bg-canvas" aria-hidden="true"></canvas>
+<div class="blobs" aria-hidden="true"><div class="blob blob-1"></div><div class="blob blob-2"></div><div class="blob blob-3"></div></div>
+<div class="scrim" aria-hidden="true"></div>
+<div class="frame" aria-hidden="true"></div>
+<div class="orb orb-a float-a" aria-hidden="true"></div>
+<div class="orb orb-b float-b" aria-hidden="true"></div>
+<div class="fade-top" aria-hidden="true"></div>
+<div class="fade-bottom" aria-hidden="true"></div>
+
+<!-- Navbar -->
+<div class="nav-wrap">
+  <div class="ring-pill">
+    <header class="navbar">
+      <a href="#" class="brand" id="brand" aria-label="Aura — início"><span data-icon="infinity"></span><span>Aura</span></a>
+      <nav class="nav-links" aria-label="Seções">
+        <span class="is-active">Chat</span>
+        <span class="model"><i class="status-dot"></i>OpenRouter</span>
+      </nav>
+      <div class="nav-actions">
+        <span class="user-chip"><i class="status-dot"></i><span id="user-name"></span></span>
+        <button class="btn-header" id="new-chat" type="button" aria-label="Nova conversa"><span data-icon="refresh"></span><span class="label">Nova conversa</span></button>
+        <button class="btn-header" id="logout" type="button">Sair</button>
+      </div>
+    </header>
+  </div>
+</div>
+
+<!-- Conversa -->
+<main id="chat" aria-live="polite">
+  <div class="column">
+    <section id="auth" aria-labelledby="auth-title">
+      <div class="hero-label"><span data-icon="shield"></span><span>Acesso</span></div>
+      <h1 class="display" id="auth-title" aria-label="Entre para conversar.">
+        <span class="word" style="--i:0"><span>Entre</span></span>
+        <span class="word" style="--i:1"><span>para</span></span>
+        <span class="word" style="--i:2"><span>conversar.</span></span>
+      </h1>
+      <p class="lead">Crie uma conta ou entre com seu usuário e senha. Sua sessão é protegida por um token JWT.</p>
+      <div class="auth-ring">
+        <form class="auth-card" id="auth-form" novalidate>
+          <div class="tabs" role="tablist" aria-label="Modo de acesso">
+            <button class="tab is-active" type="button" role="tab" aria-selected="true" data-mode="login">Entrar</button>
+            <button class="tab" type="button" role="tab" aria-selected="false" data-mode="register">Criar conta</button>
+          </div>
+          <label class="field"><span class="micro">Usuário</span>
+            <input id="auth-user" name="username" autocomplete="username" autocapitalize="none" spellcheck="false" maxlength="50" required></label>
+          <label class="field"><span class="micro">Senha</span>
+            <input id="auth-pass" name="password" type="password" autocomplete="current-password" maxlength="128" required></label>
+          <p class="auth-hint" id="auth-hint"></p>
+          <p class="auth-error" id="auth-error" role="alert"></p>
+          <button class="btn-cta" id="auth-submit" type="submit">
+            <span class="glow"></span><span class="core"><span id="auth-submit-label">Entrar</span><span data-icon="arrow"></span></span>
+          </button>
+        </form>
+      </div>
+    </section>
+
+    <section id="hero">
+      <div class="hero-label"><span data-icon="pulse"></span><span>Assistente de IA</span></div>
+      <h1 class="display" aria-label="Como posso ajudar hoje?">
+        <span class="word" style="--i:0"><span>Como</span></span>
+        <span class="word" style="--i:1"><span>posso</span></span>
+        <span class="word" style="--i:2"><span>ajudar</span></span>
+        <span class="word" style="--i:3"><span>hoje?</span></span>
+      </h1>
+      <p class="lead">Envie uma mensagem e a resposta chega pelo backend, que encaminha sua pergunta a um modelo de IA via OpenRouter.</p>
+      <div class="eyebrow">Sugestões</div>
+      <div class="cards">
+        <button class="feature-card" type="button" style="--i:0" data-prompt="Explique, de forma simples, como funciona uma API REST.">
+          <div class="body"><div class="chip chip-cyan"><span data-icon="layers"></span></div>
+            <h3>Explique um conceito</h3><p>Como funciona uma API REST, em linguagem simples.</p></div>
+        </button>
+        <button class="feature-card" type="button" style="--i:1" data-prompt="Quais são boas práticas para guardar chaves de API com segurança em um projeto Python?">
+          <div class="body"><div class="chip chip-teal"><span data-icon="shield"></span></div>
+            <h3>Boas práticas</h3><p>Como guardar chaves de API com segurança em Python.</p></div>
+        </button>
+        <button class="feature-card" type="button" style="--i:2" data-prompt="Me dê 5 ideias de métricas para acompanhar o uso de um chatbot.">
+          <div class="body"><div class="chip chip-light"><span data-icon="chart"></span></div>
+            <h3>Gere ideias</h3><p>Cinco métricas para acompanhar o uso de um chatbot.</p></div>
+        </button>
+      </div>
+    </section>
+    <div id="messages"></div>
+  </div>
+</main>
+
+<!-- Compositor -->
+<div class="composer-wrap">
+  <div class="column">
+    <form class="composer-ring" id="form">
+      <div class="composer">
+        <textarea id="input" rows="1" placeholder="Envie uma mensagem para a Aura…" aria-label="Mensagem" autofocus></textarea>
+        <button class="btn-primary" id="send" type="submit" aria-label="Enviar" disabled>
+          <span class="glow"></span><span class="core"><span data-icon="arrow"></span></span>
+        </button>
+      </div>
+    </form>
+    <p class="footnote"><kbd>Enter</kbd> envia · <kbd>Shift</kbd> + <kbd>Enter</kbd> quebra linha · Respostas geradas por IA podem conter erros.</p>
+  </div>
+</div>
+
+<script>
+/* =========================================================
+   Configuração
+   ========================================================= */
+const API_URL = "http://127.0.0.1:8000"; // backend FastAPI (uv run start)
+
+/* =========================================================
+   Ícones (Solar linear, mesmos paths do design system)
+   ========================================================= */
+const ICONS = {
+  infinity: '<g fill="none" stroke="currentColor" stroke-linecap="round" stroke-width="1.5"><path d="M10.0005 8C9.16474 7.37209 8.12582 7 7 7C4.23858 7 2 9.23858 2 12C2 14.7614 4.23858 17 7 17C9.76142 17 10.5 15 12 12C13.5 9 14.2386 7 17 7C19.7614 7 22 9.23858 22 12C22 14.7614 19.7614 17 17 17C15.8743 17 14.8357 16.6278 14 16" opacity=".5"/><path d="M12 12C10.5 15 9.76142 17 7 17C4.23858 17 2 14.7614 2 12C2 9.23858 4.23858 7 7 7C8.12582 7 9.16474 7.37209 10.0005 8"/></g>',
+  arrow: '<path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4 12H20M14 18L20 12L14 6"/>',
+  refresh: '<g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"><path d="M3.67981 13L3.67981 11.3333C3.67981 6.73096 7.4402 3 12.0789 3C15.1178 3 17.7799 4.60136 19.2545 7M2 11.3333L3.67981 13L5.35962 11.3333"/><path d="M20.3139 11V12.6667C20.3139 17.269 16.5391 21 11.8827 21C8.83213 21 6.15995 19.3986 4.67969 17M22.0001 12.6667L20.3139 11L18.6277 12.6667"/></g>',
+  layers: '<g fill="none" stroke="currentColor" stroke-linecap="round" stroke-width="1.5"><path d="M4.97883 9.68508C2.99294 8.89073 2 8.49355 2 8C2 7.50645 2.99294 7.10927 4.97883 6.31492L7.7873 5.19153C9.77318 4.39718 10.7661 4 12 4C13.2339 4 14.2268 4.39718 16.2127 5.19153L19.0212 6.31492C21.0071 7.10927 22 7.50645 22 8C22 8.49355 21.0071 8.89073 19.0212 9.68508L16.2127 10.8085C14.2268 11.6028 13.2339 12 12 12C10.7661 12 9.77318 11.6028 7.7873 10.8085L4.97883 9.68508Z"/><path d="M5.76613 10L4.97883 10.3149C2.99294 11.1093 2 11.5065 2 12C2 12.4935 2.99294 12.8907 4.97883 13.6851L7.7873 14.8085C9.77318 15.6028 10.7661 16 12 16C13.2339 16 14.2268 15.6028 16.2127 14.8085L19.0212 13.6851C21.0071 12.8907 22 12.4935 22 12C22 11.5065 21.0071 11.1093 19.0212 10.3149L18.2339 10"/><path d="M5.76613 14L4.97883 14.3149C2.99294 15.1093 2 15.5065 2 16C2 16.4935 2.99294 16.8907 4.97883 17.6851L7.7873 18.8085C9.77318 19.6028 10.7661 20 12 20C13.2339 20 14.2268 19.6028 16.2127 18.8085L19.0212 17.6851C21.0071 16.8907 22 16.4935 22 16C22 15.5065 21.0071 15.1093 19.0212 14.3149L18.2339 14"/></g>',
+  shield: '<g fill="none" stroke="currentColor" stroke-linecap="round" stroke-width="1.5"><path d="M3 10.4167C3 7.21907 3 5.62028 3.37752 5.08241C3.75503 4.54454 5.25832 4.02996 8.26491 3.00079L8.83772 2.80472C10.405 2.26824 11.1886 2 12 2C12.8114 2 13.595 2.26824 15.1623 2.80472L15.7351 3.00079C18.7417 4.02996 20.245 4.54454 20.6225 5.08241C21 5.62028 21 7.21907 21 10.4167C21 10.8996 21 11.4234 21 11.9914C21 17.6294 16.761 20.3655 14.1014 21.5273C13.38 21.8424 13.0193 22 12 22C10.9807 22 10.62 21.8424 9.89856 21.5273C7.23896 20.3655 3 17.6294 3 11.9914C3 11.4234 3 10.8996 3 10.4167Z"/><path d="M3 11L12 8L21 11"/><path d="M12 2V21.5"/></g>',
+  chart: '<g fill="none" stroke="currentColor" stroke-linecap="round" stroke-width="1.5"><path d="M22 22H2"/><path d="M21 22V14.5C21 13.6716 20.3284 13 19.5 13H16.5C15.6716 13 15 13.6716 15 14.5V22"/><path d="M15 22V5C15 3.58579 15 2.87868 14.5607 2.43934C14.1213 2 13.4142 2 12 2C10.5858 2 9.87868 2 9.43934 2.43934C9 2.87868 9 3.58579 9 5V22"/><path d="M9 22V9.5C9 8.67157 8.32843 8 7.5 8H4.5C3.67157 8 3 8.67157 3 9.5V22"/></g>',
+  pulse: '<g fill="none" stroke="currentColor" stroke-linecap="round" stroke-width="1.5"><path d="M2 15.0002H5C5.63383 15.0002 5.95074 15.0002 6.23374 15.1215C6.51673 15.2428 6.73529 15.4723 7.17241 15.9313L8.31402 17.13C8.69807 17.5332 8.8901 17.7348 9.12399 17.7191C9.35788 17.7035 9.52124 17.478 9.84796 17.027L13.4781 12.0163C13.8177 11.5476 13.9875 11.3132 14.2282 11.3022C14.4688 11.2911 14.6594 11.5089 15.0405 11.9445L16.8179 13.9758C17.2591 14.48 17.4797 14.7321 17.7751 14.8662C18.0705 15.0002 18.4056 15.0002 19.0756 15.0002H22"/><path d="M2 12C2 7.28595 2 4.92893 3.46447 3.46447C4.92893 2 7.28595 2 12 2C16.714 2 19.0711 2 20.5355 3.46447C22 4.92893 22 7.28595 22 12C22 16.714 22 19.0711 20.5355 20.5355C19.0711 22 16.714 22 12 22C7.28595 22 4.92893 22 3.46447 20.5355C2 19.0711 2 16.714 2 12Z"/></g>'
+};
+const icon = (name) => `<svg class="icon" viewBox="0 0 24 24" aria-hidden="true">${ICONS[name]}</svg>`;
+document.querySelectorAll("[data-icon]").forEach((el) => { el.outerHTML = icon(el.dataset.icon); });
+
+const reduceMotion = matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+/* =========================================================
+   Fundo: flow field WebGL (shader do design system)
+   ========================================================= */
+const bgState = { intro: 0, burst: 0, burstTarget: 0, scroll: 0 };
+(function flowField() {
+  const canvas = document.getElementById("bg-canvas");
+  const gl = canvas.getContext("webgl") || canvas.getContext("experimental-webgl");
+  if (!gl) return;
+  const vs = `attribute vec2 position; void main(){ gl_Position = vec4(position, 0.0, 1.0); }`;
+  const fs = `
+  precision highp float;
+  uniform vec2 u_resolution; uniform float u_time; uniform vec2 u_mouse;
+  uniform float u_intro; uniform float u_burst; uniform float u_scroll;
+  float random(float n) { return fract(sin(n) * 43758.5453123); }
+  void main() {
+    vec2 uv = gl_FragCoord.xy / u_resolution.xy;
+    vec2 p = uv;
+    vec2 center = vec2(0.55, 0.48);
+    vec2 mouse = u_mouse / u_resolution.xy; mouse.y = 1.0 - mouse.y;
+    vec3 color = vec3(0.0);
+    float bgGlow = max(0.0, 1.0 - distance(p, vec2(-0.1, 0.5)));
+    color += vec3(0.02, 0.12, 0.15) * pow(bgGlow, 2.0) * 0.5 * u_intro;
+    float rightGlow = max(0.0, 1.0 - distance(p, vec2(1.08, 0.35)));
+    color += vec3(0.02, 0.10, 0.12) * pow(rightGlow, 2.0) * 0.35;
+    float particleNoise = fract(sin(dot(p + u_time * 0.015, vec2(12.9898, 78.233))) * 43758.5453);
+    color += vec3(0.6, 0.8, 1.0) * pow(particleNoise, 90.0) * 0.2 * u_intro;
+    float radial = distance(p, center);
+    float radialBurst = smoothstep(0.55, 0.0, radial);
+    color += vec3(0.05, 0.15, 0.18) * radialBurst * 0.4 * u_burst;
+    float ring1 = abs(radial - (0.08 + u_burst * 0.26));
+    float ring2 = abs(radial - (0.18 + u_burst * 0.32));
+    float burstRing = smoothstep(0.035, 0.0, ring1) + smoothstep(0.05, 0.0, ring2);
+    color += vec3(0.40, 0.90, 0.95) * burstRing * 0.22 * u_burst;
+    float globalDriftY = sin(p.x * 2.0 - u_time * 0.4) * 0.15;
+    float globalDriftX = cos(p.y * 1.5 + u_time * 0.3) * 0.05;
+    p.y += globalDriftY * p.x; p.x += globalDriftX;
+    p.y += sin((p.x + u_scroll * 0.65) * 8.0) * 0.015 * u_burst;
+    float lineCount = 45.0;
+    for (float i = 0.0; i < 45.0; i++) {
+      float seed = i / lineCount;
+      float speed = 0.05 + random(seed) * 0.1;
+      float phase = seed * 6.2831;
+      float startY = 0.5;
+      float strandDelay = random(seed + 5.0) * 0.4;
+      float localIntro = clamp((u_intro - strandDelay) * 1.6, 0.0, 1.0);
+      localIntro = localIntro * localIntro * (3.0 - 2.0 * localIntro);
+      float spread = pow(p.x, 1.2) * 0.7 * localIntro;
+      float wave1 = sin(p.x * (1.8 + random(seed) * 1.2) - u_time * speed + phase);
+      float wave2 = cos(p.x * 2.5 + u_time * speed * 0.7 - phase * 1.1);
+      float explosionWave = sin((p.x * 10.0) - u_time * 2.0 + seed * 14.0) * 0.08 * u_burst * pow(p.x, 1.4);
+      float yPos = startY + (wave1 * 0.5 + wave2 * 0.3) * spread + explosionWave;
+      vec2 linePoint = vec2(p.x, yPos);
+      float distToMouse = distance(linePoint, mouse);
+      float hoverInfluence = smoothstep(0.4, 0.0, distToMouse);
+      float dy = mouse.y - yPos;
+      float ripple = sin(distToMouse * 12.0 - u_time * 3.0) * 0.03 * hoverInfluence;
+      yPos += dy * hoverInfluence * 0.4 * localIntro + ripple;
+      float centerPush = smoothstep(0.38, 0.0, distance(vec2(p.x, yPos), center));
+      yPos += (yPos - center.y) * centerPush * 0.45 * u_burst;
+      float distToLine = abs(p.y - yPos);
+      float thickness = 0.001 + p.x * 0.005 + u_burst * 0.002;
+      float intensity = 0.0007 / (distToLine + thickness);
+      float edgeFade = smoothstep(1.0, 0.1, p.x);
+      float lengthFade = smoothstep(u_intro * 1.5, (u_intro * 1.5) - 0.35, p.x);
+      vec3 colDeepAqua = vec3(0.05, 0.60, 0.65);
+      vec3 colTeal = vec3(0.10, 0.85, 0.75);
+      vec3 colBrightCyan = vec3(0.20, 0.95, 0.85);
+      vec3 lineColor = mix(colDeepAqua, colTeal, random(seed + 1.0));
+      lineColor = mix(lineColor, colBrightCyan, random(seed + 2.0) * 0.4);
+      lineColor += vec3(0.4, 0.9, 1.0) * centerPush * u_burst * 0.7;
+      float coreGlow = smoothstep(0.015, 0.0, distToLine);
+      lineColor += vec3(0.8, 0.9, 1.0) * coreGlow * 0.5;
+      color += lineColor * intensity * edgeFade * lengthFade * localIntro;
+    }
+    gl_FragColor = vec4(color, 1.0);
+  }`;
+  const compile = (type, src) => { const s = gl.createShader(type); gl.shaderSource(s, src); gl.compileShader(s); return s; };
+  const program = gl.createProgram();
+  gl.attachShader(program, compile(gl.VERTEX_SHADER, vs));
+  gl.attachShader(program, compile(gl.FRAGMENT_SHADER, fs));
+  gl.linkProgram(program);
+  gl.useProgram(program);
+  gl.bindBuffer(gl.ARRAY_BUFFER, gl.createBuffer());
+  gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1, -1, 1, -1, -1, 1, -1, 1, 1, -1, 1, 1]), gl.STATIC_DRAW);
+  const pos = gl.getAttribLocation(program, "position");
+  gl.enableVertexAttribArray(pos);
+  gl.vertexAttribPointer(pos, 2, gl.FLOAT, false, 0, 0);
+  const u = (n) => gl.getUniformLocation(program, n);
+  const uRes = u("u_resolution"), uTime = u("u_time"), uMouse = u("u_mouse"), uIntro = u("u_intro"), uBurst = u("u_burst"), uScroll = u("u_scroll");
+
+  let mx = innerWidth / 2, my = innerHeight / 2, tx = mx, ty = my;
+  addEventListener("mousemove", (e) => { tx = e.clientX; ty = e.clientY; });
+  const resize = () => { canvas.width = innerWidth; canvas.height = innerHeight; gl.viewport(0, 0, canvas.width, canvas.height); };
+  addEventListener("resize", resize);
+  resize();
+
+  // Intro: 0 → 1 em 3.5s com ease power2.inOut (como no Home.jsx)
+  const t0 = performance.now();
+  const ease = (t) => (t < 0.5 ? 2 * t * t : 1 - Math.pow(-2 * t + 2, 2) / 2);
+
+  function frame(now) {
+    bgState.intro = reduceMotion ? 1 : ease(Math.min(1, (now - t0) / 3500));
+    bgState.burst += (bgState.burstTarget - bgState.burst) * 0.05;
+    mx += (tx - mx) * 0.04; my += (ty - my) * 0.04;
+    gl.uniform2f(uRes, canvas.width, canvas.height);
+    gl.uniform1f(uTime, (now - t0) / 1000);
+    gl.uniform2f(uMouse, mx, my);
+    gl.uniform1f(uIntro, bgState.intro);
+    gl.uniform1f(uBurst, bgState.burst);
+    gl.uniform1f(uScroll, bgState.scroll);
+    gl.drawArrays(gl.TRIANGLES, 0, 6);
+    if (!reduceMotion) requestAnimationFrame(frame);
+  }
+  requestAnimationFrame(frame);
+})();
+
+/* =========================================================
+   Markdown mínimo e seguro (escapa HTML antes de formatar)
+   ========================================================= */
+const esc = (s) => s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
+function inline(text) {
+  const codes = [];
+  let s = esc(text).replace(/`([^`]+)`/g, (_, c) => { codes.push(c); return `\u0000${codes.length - 1}\u0000`; });
+  s = s.replace(/\*\*([^*]+)\*\*/g, "<strong>$1</strong>")
+       .replace(/(^|[^*])\*([^*\n]+)\*/g, "$1<em>$2</em>")
+       .replace(/\[([^\]]+)\]\((https?:\/\/[^\s)]+)\)/g, '<a href="$2" target="_blank" rel="noopener noreferrer">$1</a>');
+  return s.replace(/\u0000(\d+)\u0000/g, (_, i) => `<code>${codes[i]}</code>`);
+}
+function blocks(src, out) {
+  let para = [], list = null;
+  const flushPara = () => { if (para.length) { out.push(`<p>${para.map(inline).join("<br>")}</p>`); para = []; } };
+  const flushList = () => {
+    if (!list) return;
+    const start = list.tag === "ol" && list.start !== 1 ? ` start="${list.start}"` : "";
+    out.push(`<${list.tag}${start}>${list.items.map((i) => `<li${i.sub ? ' class="sub"' : ""}>${inline(i.text)}</li>`).join("")}</${list.tag}>`);
+    list = null;
+  };
+  for (const line of src.split("\n")) {
+    let m;
+    if (!line.trim()) { flushPara(); flushList(); }
+    else if ((m = line.match(/^(#{1,6})\s+(.*)/))) { flushPara(); flushList(); const tag = m[1].length <= 2 ? "h3" : "h4"; out.push(`<${tag}>${inline(m[2])}</${tag}>`); }
+    else if ((m = line.match(/^(\s*)([-*•]|\d+[.)])\s+(.*)/))) {
+      flushPara();
+      const sub = m[1].replace(/\t/g, "  ").length >= 2;
+      if (sub && list) { list.items.push({ text: m[3], sub: true }); continue; } // subitem fica dentro da lista atual
+      const tag = /\d/.test(m[2]) ? "ol" : "ul";
+      if (!list || list.tag !== tag) { flushList(); list = { tag, start: parseInt(m[2], 10) || 1, items: [] }; }
+      list.items.push({ text: m[3], sub: false });
+    }
+    else { flushList(); para.push(line); }
+  }
+  flushPara(); flushList();
+}
+function markdown(src) {
+  const out = [];
+  src.replace(/\r\n/g, "\n").split("```").forEach((part, i) => {
+    if (i % 2) {
+      const nl = part.indexOf("\n");
+      const lang = nl >= 0 ? part.slice(0, nl).trim() : "";
+      const code = (nl >= 0 ? part.slice(nl + 1) : part).replace(/\n$/, "");
+      out.push(`<pre>${lang ? `<span class="micro code-lang">${esc(lang)}</span>` : ""}<code>${esc(code)}</code></pre>`);
+    } else blocks(part, out);
+  });
+  return out.join("");
+}
+
+/* =========================================================
+   Chat
+   ========================================================= */
+const chat = document.getElementById("chat");
+const hero = document.getElementById("hero");
+const messages = document.getElementById("messages");
+const form = document.getElementById("form");
+const input = document.getElementById("input");
+const send = document.getElementById("send");
+let busy = false;
+
+const scrollDown = () => requestAnimationFrame(() => { chat.scrollTop = chat.scrollHeight; });
+chat.addEventListener("scroll", () => {
+  bgState.scroll = chat.scrollTop / Math.max(1, chat.scrollHeight - chat.clientHeight);
+}, { passive: true });
+
+function el(html) { const t = document.createElement("template"); t.innerHTML = html.trim(); return t.content.firstElementChild; }
+
+function aiShell(inner, extraClass = "") {
+  return el(`
+    <div class="msg msg-ai ${extraClass}">
+      <div class="ring"><div class="card">
+        <div class="ai-head">
+          <div class="ai-id"><div class="disc">${icon("infinity")}</div><span class="micro">Aura</span></div>
+          <span class="ai-actions"></span>
+        </div>
+        ${inner}
+      </div></div>
+    </div>`);
+}
+
+function addUser(text) {
+  const node = el(`<div class="msg msg-user"><div class="bubble"></div></div>`);
+  node.querySelector(".bubble").textContent = text;
+  messages.appendChild(node);
+}
+
+function addThinking() {
+  const node = aiShell(`<div class="thinking"><div class="mini-rings"></div><div class="dots"><i></i><i></i><i></i></div><span class="micro">Pensando</span></div>`);
+  messages.appendChild(node);
+  return node;
+}
+
+function addReply(text, replaceNode) {
+  const node = aiShell(`<div class="reply">${markdown(text)}</div>`);
+  [...node.querySelectorAll(".reply > *")].forEach((b, i) => b.style.setProperty("--i", i));
+  const copy = el(`<button class="btn-ghost" type="button">Copiar</button>`);
+  copy.addEventListener("click", async () => {
+    try { await navigator.clipboard.writeText(text); copy.textContent = "Copiado"; }
+    catch { copy.textContent = "Falhou"; }
+    setTimeout(() => (copy.textContent = "Copiar"), 1600);
+  });
+  node.querySelector(".ai-actions").appendChild(copy);
+  replaceNode.replaceWith(node);
+}
+
+function addError(title, detail, retryText, replaceNode) {
+  const node = aiShell(`
+    <p class="err-title"></p><p class="err-text"></p>
+    <button class="btn-outline" type="button">${icon("refresh")}Tentar novamente</button>`, "msg-error");
+  node.querySelector(".err-title").textContent = title;
+  node.querySelector(".err-text").textContent = detail;
+  node.querySelector(".btn-outline").addEventListener("click", () => { node.remove(); ask(retryText, false); });
+  replaceNode.replaceWith(node);
+}
+
+// Extrai uma mensagem legível do erro que o backend repassa do OpenRouter
+function describeError(status, body) {
+  const d = body && body.detail;
+  const raw = d && d.error && ((d.error.metadata && d.error.metadata.raw) || d.error.message);
+  if (status === 429) return ["Modelo ocupado (429)", raw || "O modelo atingiu o limite de requisições. Aguarde alguns instantes e tente de novo."];
+  if (status === 422) return ["Requisição inválida (422)", "O backend não aceitou o formato da mensagem."];
+  return [`Erro ${status}`, raw || (typeof d === "string" ? d : "O backend retornou um erro inesperado.")];
+}
+
+async function ask(text, echo = true) {
+  if (busy || !text.trim()) return;
+  busy = true;
+  updateSend();
+  hero.hidden = true;
+  if (echo) addUser(text);
+  const thinking = addThinking();
+  scrollDown();
+  bgState.burstTarget = 0.9;                       // "explosão" das linhas ao enviar
+  setTimeout(() => { if (busy) bgState.burstTarget = 0.45; }, 700);
+
+  try {
+    const res = await fetch(`${API_URL}/send_message`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}` },
+      body: JSON.stringify({ mensagem: text })
+    });
+    const body = await res.json().catch(() => null);
+    if (res.status === 401) { thinking.remove(); sessionExpired(text); return; }
+    if (res.ok && body && typeof body.resposta === "string") addReply(body.resposta, thinking);
+    else { const [t, d] = describeError(res.status, body); addError(t, d, text, thinking); }
+  } catch {
+    addError("Backend indisponível", `Não foi possível conectar a ${API_URL}. Verifique se o backend está rodando (cd backend; uv run start).`, text, thinking);
+  } finally {
+    busy = false;
+    bgState.burstTarget = 0;
+    updateSend();
+    scrollDown();
+    input.focus();
+  }
+}
+
+/* ---------- Compositor ---------- */
+function autosize() { input.style.height = "auto"; input.style.height = Math.min(input.scrollHeight, 200) + "px"; }
+function updateSend() { send.disabled = busy || !input.value.trim(); }
+input.addEventListener("input", () => { autosize(); updateSend(); });
+input.addEventListener("keydown", (e) => {
+  if (e.key === "Enter" && !e.shiftKey && !e.isComposing) { e.preventDefault(); form.requestSubmit(); }
+});
+form.addEventListener("submit", (e) => {
+  e.preventDefault();
+  const text = input.value.trim();
+  if (!text || busy) return;
+  input.value = ""; autosize(); updateSend();
+  ask(text);
+});
+
+/* ---------- Sugestões ---------- */
+document.querySelectorAll(".feature-card").forEach((card) => card.addEventListener("click", () => ask(card.dataset.prompt)));
+
+/* ---------- Nova conversa ---------- */
+function reset(force = false) {
+  if (busy && !force) return;
+  messages.innerHTML = "";
+  hero.hidden = false;
+  hero.classList.remove("is-revealed");
+  void hero.offsetWidth;                 // reinicia as animações de entrada
+  hero.classList.add("is-revealed");
+  chat.scrollTop = 0;
+  input.focus();
+}
+document.getElementById("new-chat").addEventListener("click", reset);
+document.getElementById("brand").addEventListener("click", (e) => { e.preventDefault(); if (token) reset(); });
+
+/* =========================================================
+   Autenticação (JWT)
+   ========================================================= */
+const TOKEN_KEY = "aura.token";
+const tokenStore = { // localStorage pode falhar (aba anônima, site data bloqueado): o token segue em memória
+  get() { try { return localStorage.getItem(TOKEN_KEY); } catch { return null; } },
+  set(v) { try { localStorage.setItem(TOKEN_KEY, v); } catch {} },
+  clear() { try { localStorage.removeItem(TOKEN_KEY); } catch {} }
+};
+let token = tokenStore.get();
+let authMode = "login";
+
+const authSection = document.getElementById("auth");
+const authForm = document.getElementById("auth-form");
+const authUser = document.getElementById("auth-user");
+const authPass = document.getElementById("auth-pass");
+const authError = document.getElementById("auth-error");
+const authHint = document.getElementById("auth-hint");
+const authSubmit = document.getElementById("auth-submit");
+const authLabel = document.getElementById("auth-submit-label");
+const userName = document.getElementById("user-name");
+const offlineMsg = `Não foi possível conectar a ${API_URL}. Verifique se o backend está rodando (cd backend; uv run start).`;
+
+function reveal(section) { section.classList.remove("is-revealed"); void section.offsetWidth; section.classList.add("is-revealed"); }
+
+function setMode(mode) {
+  authMode = mode;
+  document.querySelectorAll(".tab").forEach((t) => {
+    const on = t.dataset.mode === mode;
+    t.classList.toggle("is-active", on);
+    t.setAttribute("aria-selected", String(on));
+  });
+  authLabel.textContent = mode === "login" ? "Entrar" : "Criar conta";
+  authPass.autocomplete = mode === "login" ? "current-password" : "new-password";
+  authHint.textContent = mode === "register" ? "Usuário: 3 a 50 caracteres (letras, números, . _ -). Senha: mínimo de 8 caracteres." : "";
+  authError.textContent = "";
+}
+
+function showAuth(message = "") {
+  document.body.classList.add("is-auth");
+  messages.innerHTML = "";
+  userName.textContent = "";
+  setMode(authMode);
+  authError.textContent = message;
+  reveal(authSection);
+  chat.scrollTop = 0;
+  setTimeout(() => authUser.focus(), 50);
+}
+
+function showChat(user) {
+  document.body.classList.remove("is-auth");
+  userName.textContent = user.usuario;
+  authPass.value = "";
+  reset(true);
+}
+
+function logout(message = "") { token = null; tokenStore.clear(); showAuth(message); }
+
+function sessionExpired(text) {
+  logout("Sua sessão expirou. Entre novamente para continuar.");
+  input.value = text; autosize(); updateSend(); // a mensagem não se perde
+}
+
+async function fetchMe() {
+  const res = await fetch(`${API_URL}/me`, { headers: { Authorization: `Bearer ${token}` } });
+  if (!res.ok) throw Object.assign(new Error("me"), { status: res.status });
+  return res.json();
+}
+
+const detailText = (body, fallback) => (body && typeof body.detail === "string" ? body.detail : fallback);
+
+authForm.addEventListener("submit", async (e) => {
+  e.preventDefault();
+  const usuario = authUser.value.trim();
+  const senha = authPass.value;
+  if (!/^[A-Za-z0-9_.-]{3,50}$/.test(usuario)) { authError.textContent = "O usuário deve ter de 3 a 50 caracteres: letras, números, ponto, hífen ou sublinhado."; return; }
+  if (senha.length < 8) { authError.textContent = "A senha deve ter pelo menos 8 caracteres."; return; }
+  authSubmit.disabled = true;
+  authError.textContent = "";
+  try {
+    if (authMode === "register") {
+      const r = await fetch(`${API_URL}/register`, {
+        method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ usuario, senha })
+      });
+      if (!r.ok) { authError.textContent = detailText(await r.json().catch(() => null), `Não foi possível criar a conta (erro ${r.status}).`); return; }
+    }
+    // /login segue o padrão OAuth2: formulário com username e password
+    const r = await fetch(`${API_URL}/login`, { method: "POST", body: new URLSearchParams({ username: usuario, password: senha }) });
+    const body = await r.json().catch(() => null);
+    if (!r.ok || !body || !body.access_token) { authError.textContent = detailText(body, `Não foi possível entrar (erro ${r.status}).`); return; }
+    token = body.access_token;
+    tokenStore.set(token);
+    bgState.burstTarget = 0.9;
+    setTimeout(() => (bgState.burstTarget = 0), 900);
+    showChat(await fetchMe());
+  } catch {
+    authError.textContent = offlineMsg;
+  } finally {
+    authSubmit.disabled = false;
+  }
+});
+document.querySelectorAll(".tab").forEach((t) => t.addEventListener("click", () => setMode(t.dataset.mode)));
+document.getElementById("logout").addEventListener("click", () => logout());
+
+/* ---------- Entrada ---------- */
+requestAnimationFrame(async () => {
+  document.querySelectorAll(".orb").forEach((o) => o.classList.add("is-in"));
+  if (!token) return showAuth();
+  try { showChat(await fetchMe()); }
+  catch (err) { err.status === 401 ? logout("Sua sessão expirou. Entre novamente.") : showAuth(offlineMsg); }
+});
+</script>
+</body>
+</html>
